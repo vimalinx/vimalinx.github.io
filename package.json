@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "rm -rf src/content/blog/* && cp -r /mnt/e/Obsidian/example_vault/11_Blog/* src/content/blog/ && git add . && git commit -m \"Auto Publish\" && git push"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
