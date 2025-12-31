@@ -10,7 +10,7 @@ interface ProjectWheelProps {
 }
 
 export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0); // Start with CyberGift (index 0)
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { amount: 0.3 }); // Detect visibility
   const isAnimating = useRef(false);
@@ -20,9 +20,11 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
       exitLocked.current = true;
   }, [activeIndex]);
 
-  const radius = 350; 
-  const itemAngle = 30; 
-  const wheelRotation = 180 - activeIndex * itemAngle;
+  const radius = 350;
+  const itemAngle = 30;
+  // Calculate wheel rotation to bring active item to left (180° position)
+  // With reversed order: active item's angle = (total - 1 - activeIndex) * itemAngle
+  const wheelRotation = 180 - (config.projects.length - 1 - activeIndex) * itemAngle;
   const currentProject = config.projects[activeIndex];
 
   // Smart Scroll Handler... (omitted for brevity, keep existing)
@@ -34,6 +36,17 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
       const isScrollingDown = e.deltaY > 0;
       const isScrollingUp = e.deltaY < 0;
 
+      // NATURAL LOGIC:
+      // Down Scroll -> Go to Next Item (index increases)
+      // Up Scroll -> Go to Previous Item (index decreases)
+
+      // 1. Boundary Checks (Exit conditions)
+      // If Scrolling UP (trying to go Prev) AND at Start (Index 0) -> Let it bubble to scroll page UP (to Hero)
+      if (isScrollingUp && activeIndex === 0) {
+          return;
+      }
+
+      // If Scrolling DOWN (trying to go Next) AND at End (Index Length-1) -> Let it bubble to scroll page DOWN (to Contact)
       if (isScrollingDown && activeIndex === config.projects.length - 1) {
           if (exitLocked.current) {
               e.preventDefault();
@@ -43,19 +56,22 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
           }
           return;
       }
-      if (isScrollingUp && activeIndex === 0) return; 
 
+      // 2. Animation Lock
       if (isAnimating.current) {
           e.preventDefault();
           e.stopPropagation();
           return;
       }
 
+      // 3. Internal Switching (Natural)
       if (isScrollingDown && activeIndex < config.projects.length - 1) {
+        // Scroll Down -> Go Next
         e.preventDefault();
         e.stopPropagation();
         triggerSwitch(activeIndex + 1);
       } else if (isScrollingUp && activeIndex > 0) {
+        // Scroll Up -> Go Prev
         e.preventDefault();
         e.stopPropagation();
         triggerSwitch(activeIndex - 1);
@@ -139,7 +155,7 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
         </div>
 
         {/* Gradient Mask: Left-to-Right Fade for Text Readability */}
-        <div className="absolute inset-y-0 left-0 w-[80%] z-15 pointer-events-none bg-gradient-to-r from-black via-black/60 to-transparent" />
+        <div className="absolute inset-y-0 left-0 w-[80%] z-10 pointer-events-none bg-gradient-to-r from-black via-black/60 to-transparent" />
 
         {/* Content Overlay */}
         <div className="absolute inset-0 z-20 flex flex-col justify-end p-8 md:justify-center md:p-16 lg:p-24 pointer-events-none">
@@ -269,10 +285,11 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
                       />
                 {/* Items on the wheel */}
                 {config.projects.map((project, index) => {
-                    // Position calculations
-                    // We want them distributed. 
-                    // angle relative to wheel 0: index * itemAngle
-                    const angle = index * itemAngle;
+                    // Position calculations - REVERSED ORDER
+                    // We want icons arranged in reverse order on the wheel
+                    // CogniRead (index 3) at angle 0 (right top)
+                    // CyberGift (index 0) at angle 90 (right bottom)
+                    const angle = (config.projects.length - 1 - index) * itemAngle;
                     
                     return (
                         <motion.button
@@ -283,16 +300,17 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
                             }}
                             className={cn(
                                 "absolute left-1/2 top-1/2 -ml-8 -mt-8 flex h-16 w-16 items-center justify-center rounded-full border transition-all duration-300",
-                                activeIndex === index 
-                                    ? "z-10 border-white bg-white text-black scale-110 shadow-[0_0_30px_rgba(255,255,255,0.4)]" 
+                                activeIndex === index
+                                    ? "z-10 border-white bg-white text-black scale-110 shadow-[0_0_30px_rgba(255,255,255,0.4)]"
                                     : "z-0 border-white/10 bg-black/80 text-gray-500 hover:border-white/50 hover:text-white"
                             )}
                             style={{
-                                transform: `rotate(${angle}deg) translate(${radius - 40}px) rotate(${-angle}deg)`, 
+                                transform: `rotate(${angle}deg) translate(${radius - 40}px)`,
                             }}
                         >
-                            <motion.div 
-                                style={{ transform: `rotate(${-wheelRotation - angle}deg)` }} // Counter-rotate to keep icon upright always
+                            <motion.div
+                                animate={{ rotate: -(wheelRotation + angle) }}
+                                transition={{ type: "spring", stiffness: 50, damping: 15 }}
                             >
                                 <project.icon className="h-6 w-6" />
                             </motion.div>

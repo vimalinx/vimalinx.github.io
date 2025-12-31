@@ -38,24 +38,6 @@ export const config = {
       status: "Live",
     },
     {
-      id: 'tiku',
-      title: "Tiku",
-      description: {
-        zh: "给学会计的老婆的刷题系统，内置缓存错题本和随机抽题考试功能，爱你宝贝(可能还会加哦)",
-        en: "A practice question system for my wife who is studying accounting, love you baby (might add more later)"
-      },
-      url: "https://vimalinx.xyz/tiku",
-      tags: ["Education", "Algorithm", "SaaS"],
-      icon: Database,
-      image: "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)",
-      gallery: [
-        "/tiku-2.png",
-        "/tiku-1.png"
-      ],
-      accent: "from-emerald-500 to-teal-500",
-      status: "Live",
-    },
-    {
       id: 'flowstudy',
       title: "FlowStudy",
       description: {
@@ -93,6 +75,24 @@ export const config = {
         "/cogniread-4.png"
       ],
       accent: "from-purple-500 to-indigo-500",
+      status: "Live",
+    },
+    {
+      id: 'tiku',
+      title: "Tiku",
+      description: {
+        zh: "给学会计的老婆的刷题系统，内置缓存错题本和随机抽题考试功能，爱你宝贝(可能还会加哦)",
+        en: "A practice question system for my wife who is studying accounting, love you baby (might add more later)"
+      },
+      url: "https://vimalinx.xyz/tiku",
+      tags: ["Education", "Algorithm", "SaaS"],
+      icon: Database,
+      image: "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)",
+      gallery: [
+        "/tiku-2.png",
+        "/tiku-1.png"
+      ],
+      accent: "from-emerald-500 to-teal-500",
       status: "Live",
     }
   ],
