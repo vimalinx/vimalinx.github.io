@@ -1,15 +1,41 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown, Languages } from 'lucide-react';
 import { Background } from './components/Background';
 import { ProjectWheel } from './components/ProjectWheel';
 import { ContactNexus } from './components/ContactNexus';
+import { ParticleWave } from './components/ParticleWave';
 import { config, type Language } from './config';
 
 function App() {
   const [lang, setLang] = useState<Language>('zh');
+  const heroExitLocked = useRef(true); // Locked by default
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const toggleLang = () => setLang(prev => prev === 'zh' ? 'en' : 'zh');
+
+  // Reset lock when user scrolls back to top
+  const handleScroll = () => {
+    if (scrollContainerRef.current && scrollContainerRef.current.scrollTop < 100) {
+        heroExitLocked.current = true;
+    }
+  };
+
+  const handleHeroWheel = (e: React.WheelEvent) => {
+      const isScrollingDown = e.deltaY > 0;
+      
+      // If trying to scroll down AND locked
+      if (isScrollingDown && heroExitLocked.current) {
+          e.preventDefault(); // Stop the scroll
+          e.stopPropagation(); 
+          
+          // Unlock after delay
+          setTimeout(() => {
+              heroExitLocked.current = false;
+          }, 600);
+      }
+      // If unlocked, let it bubble => CSS Snap takes over
+  };
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-black text-white selection:bg-purple-500/30">
@@ -34,10 +60,22 @@ function App() {
       </header>
 
       {/* Scroll Snap Container */}
-      <main className="h-screen w-full snap-y snap-mandatory overflow-y-scroll scroll-smooth">
+      <main 
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+        className="h-screen w-full snap-y snap-mandatory overflow-y-scroll scroll-smooth"
+      >
         
         {/* SECTION 1: HERO */}
-        <section className="relative flex h-screen w-full snap-start flex-col items-center justify-center px-6 md:px-12">
+        <section 
+            onWheel={handleHeroWheel}
+            className="relative flex h-screen w-full snap-start flex-col items-center justify-center px-6 md:px-12 overflow-hidden"
+        >
+          {/* Sparse Particle Wave (Hero Exclusive) */}
+          <div className="absolute inset-0 z-0 opacity-60">
+             <ParticleWave />
+          </div>
+
           <div className="z-10 flex flex-col items-start gap-8 max-w-4xl w-full">
             <motion.div
               initial={{ opacity: 0, y: 30 }}

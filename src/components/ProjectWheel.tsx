@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { config, type Language } from '../config';
 import { cn } from '../lib/utils';
 
@@ -176,6 +176,25 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
                    </span>
                 ))}
               </div>
+            </div>
+
+            {/* Mobile Navigation Controls (Hidden on Desktop) */}
+            <div className="mt-8 flex items-center gap-4 lg:hidden">
+                <button 
+                    onClick={(e) => { e.stopPropagation(); triggerSwitch(activeIndex === 0 ? config.projects.length - 1 : activeIndex - 1); }}
+                    className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black/40 text-white backdrop-blur-md active:scale-95"
+                >
+                    <ChevronLeft className="h-6 w-6" />
+                </button>
+                <button 
+                    onClick={(e) => { e.stopPropagation(); triggerSwitch(activeIndex === config.projects.length - 1 ? 0 : activeIndex + 1); }}
+                    className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black/40 text-white backdrop-blur-md active:scale-95"
+                >
+                    <ChevronRight className="h-6 w-6" />
+                </button>
+                <span className="text-xs text-gray-500 font-mono">
+                    {activeIndex + 1} / {config.projects.length}
+                </span>
             </div>
           </motion.div>
         </div>

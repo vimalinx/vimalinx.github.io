@@ -74,30 +74,67 @@ export const config = {
       status: "Live",
     },
   ],
-  socials: [
-    {
-      id: 'wechat',
-      name: { zh: '微信公众号', en: 'WeChat' },
-      icon: Smartphone,
-      type: 'qrcode',
-      qrCode: '/qr-wechat.jpg',
-      color: 'hover:text-green-500',
-    },
-    {
-      id: 'xiaohongshu',
-      name: { zh: '小红书', en: 'RedNote' },
-      icon: Smartphone, 
-      type: 'qrcode',
-      qrCode: '/qr-xhs.jpg',
-      color: 'hover:text-red-500',
-    },
-    {
-      id: 'github',
-      name: { zh: 'GitHub', en: 'GitHub' },
-      icon: Github,
-      type: 'link',
-      url: 'https://github.com/vimalinx',
-      color: 'hover:text-gray-400',
-    },
-  ],
-};
+    socials: [
+      {
+        id: 'wechat',
+        name: { zh: '微信公众号', en: 'WeChat' },
+        icon: Smartphone,
+        type: 'qrcode',
+        qrCode: '/qr-wechat.jpg',
+        color: 'hover:text-green-500',
+        details: {
+          zh: [
+            "这是我的核心思维阵地。",
+            "每周分享全栈技术心得、架构设计思考以及对未来科技趋势的深度解析。",
+            "不定期掉落独家资源与学习路线图。"
+          ],
+          en: [
+            "My core thinking hub.",
+            "Sharing full-stack insights, architectural designs, and deep dives into future tech trends.",
+            "Exclusive resources and learning roadmaps dropped occasionally."
+          ]
+        }
+      },
+      {
+        id: 'xiaohongshu',
+        name: { zh: '小红书', en: 'RedNote' },
+        icon: Smartphone, 
+        type: 'qrcode',
+        qrCode: '/qr-xhs.jpg',
+        color: 'hover:text-red-500',
+        details: {
+          zh: [
+            "探索数字游民的生活美学。",
+            "在这里展示我的桌面配置、生产力工具推荐以及设计灵感来源。",
+            "用视觉语言记录代码之外的精彩瞬间。"
+          ],
+          en: [
+            "Exploring the aesthetics of digital nomad life.",
+            "Showcasing desk setups, productivity tools, and design inspirations.",
+            "Visualizing the beautiful moments beyond the code."
+          ]
+        }
+      },
+      {
+        id: 'github',
+        name: { zh: 'GitHub', en: 'GitHub' },
+        icon: Github,
+        type: 'link',
+        url: 'https://github.com/vimalinx',
+        color: 'hover:text-gray-400',
+        details: {
+          zh: [
+            "开源世界的代码仓库。",
+            "你可以在这里找到 FlowStudy、CyberGift 的源码，以及更多实验性项目。",
+            "欢迎 Star，欢迎 Fork，让我们一起构建更好的软件。"
+          ],
+          en: [
+            "My code repository in the open source world.",
+            "Find source codes for FlowStudy, CyberGift, and more experimental projects.",
+            "Stars and Forks welcome. Let's build better software together."
+          ]
+        }
+      },
+    ],
+  };
+  

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { config, type Language } from '../config';
@@ -9,14 +9,7 @@ interface ContactNexusProps {
 
 export const ContactNexus = ({ lang }: ContactNexusProps) => {
   const [hoveredSocial, setHoveredSocial] = useState<string | null>(null);
-  const [time, setTime] = useState(new Date().toLocaleTimeString());
   
-  // Update time every second
-  useEffect(() => {
-    const timer = setInterval(() => setTime(new Date().toLocaleTimeString()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
   // Mouse position for floating preview
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -85,39 +78,62 @@ export const ContactNexus = ({ lang }: ContactNexusProps) => {
             ))}
         </div>
 
-        {/* Right Side: Info Panel (New) */}
-        <div className="hidden lg:flex flex-col items-end gap-12 text-right mb-10">
-            {/* Status Block */}
-            <div className="space-y-6">
-                <div className="space-y-1">
-                    <p className="text-[10px] uppercase tracking-[0.3em] text-gray-500">{lang === 'zh' ? '当前时间' : 'Local Time'}</p>
-                    <p className="text-2xl font-mono text-white/80">{time}</p>
-                </div>
-                <div className="space-y-1">
-                    <p className="text-[10px] uppercase tracking-[0.3em] text-gray-500">{lang === 'zh' ? '当前位置' : 'Location'}</p>
-                    <p className="text-lg text-white/60">Earth, Cyberspace</p>
-                </div>
-                <div className="space-y-1">
-                    <p className="text-[10px] uppercase tracking-[0.3em] text-gray-500">{lang === 'zh' ? '当前状态' : 'Status'}</p>
-                    <div className="flex items-center gap-2 justify-end">
-                        <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                        <p className="text-lg text-white/60">{lang === 'zh' ? '创作中' : 'Creating Magic'}</p>
-                    </div>
-                </div>
-            </div>
+        {/* Right Side: Dynamic Info Panel */}
+        <div className="hidden lg:flex flex-col justify-end items-end w-full max-w-md h-64 mb-10 relative z-10 pointer-events-none">
+            <AnimatePresence mode="wait">
+                {currentSocial && currentSocial.details && (
+                    <motion.div
+                        key={currentSocial.id}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                        className="text-right space-y-6"
+                    >
+                        <motion.div 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 }}
+                            className="inline-block"
+                        >
+                             <span className="px-3 py-1 rounded-full border border-white/20 text-xs font-mono text-gray-300 uppercase tracking-widest bg-white/5 backdrop-blur-sm">
+                                 About {currentSocial.name.en}
+                             </span>
+                        </motion.div>
 
-            {/* Decorative Link */}
-            <motion.div 
-                whileHover={{ x: -10 }}
-                className="group flex items-center gap-4 cursor-pointer"
-            >
-                <span className="text-sm font-medium text-gray-400 group-hover:text-white transition-colors">
-                    {lang === 'zh' ? '获取简历' : 'Get Resume'}
-                </span>
-                <div className="h-10 w-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                    <ArrowUpRight className="h-4 w-4" />
-                </div>
-            </motion.div>
+                        <div className="space-y-4">
+                            {currentSocial.details[lang].map((paragraph, idx) => (
+                                <motion.p 
+                                    key={idx}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2 + idx * 0.1, duration: 0.5 }}
+                                    className="text-lg md:text-xl text-gray-300 leading-relaxed font-light"
+                                >
+                                    {paragraph}
+                                </motion.p>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+            
+            {/* Default State (When nothing is hovered) */}
+            {!currentSocial && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute bottom-0 right-0"
+                >
+                     <div className="flex items-center gap-2 opacity-30">
+                        <div className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+                        <span className="text-xs uppercase tracking-[0.2em] text-white">
+                            {lang === 'zh' ? '等待指令' : 'Awaiting Input'}
+                        </span>
+                     </div>
+                </motion.div>
+            )}
         </div>
       </div>
 
@@ -182,37 +198,163 @@ export const ContactNexus = ({ lang }: ContactNexusProps) => {
 };
 
 const ListItem = ({ social, index, lang, setHovered }: { 
+
     social: typeof config.socials[0], 
+
     index: number, 
+
     lang: Language, 
+
     setHovered: (id: string | null) => void 
+
 }) => {
+
+    // Local state for mobile expansion
+
+    const [isExpanded, setIsExpanded] = useState(false);
+
+
+
+    const handleClick = (e: React.MouseEvent) => {
+
+        // On mobile, toggle expansion. On desktop, click opens link directly (if link type).
+
+        if (window.innerWidth < 1024) {
+
+             e.preventDefault();
+
+             setIsExpanded(!isExpanded);
+
+        }
+
+    };
+
+
+
     return (
-        <motion.a
-            href={social.url || '#'}
-            target={social.url ? "_blank" : undefined}
-            rel="noreferrer"
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1, duration: 0.6 }}
-            onMouseEnter={() => setHovered(social.id)}
-            onMouseLeave={() => setHovered(null)}
-            className="group relative flex w-full max-w-2xl items-center justify-between border-b border-white/10 py-8 transition-all hover:border-white/50 cursor-pointer"
-        >
-            <div className="flex items-center gap-6">
-                <span className="text-xs font-mono text-gray-600 group-hover:text-purple-400 transition-colors">0{index + 1}</span>
-                <span className="text-3xl font-bold text-gray-300 transition-all group-hover:translate-x-4 group-hover:text-white sm:text-4xl md:text-5xl">
-                    {social.name[lang]}
-                </span>
-            </div>
-            
-            <div className="opacity-0 transition-all duration-300 -translate-x-10 group-hover:opacity-100 group-hover:translate-x-0">
-                {social.type === 'qrcode' ? (
-                    <span className="text-sm uppercase tracking-widest text-gray-500">Scan</span>
-                ) : (
-                    <ArrowUpRight className="h-8 w-8 text-white" />
+
+        <div className="w-full">
+
+            <motion.a
+
+                href={social.url || '#'}
+
+                target={social.url ? "_blank" : undefined}
+
+                rel="noreferrer"
+
+                onClick={handleClick}
+
+                initial={{ opacity: 0, x: -50 }}
+
+                whileInView={{ opacity: 1, x: 0 }}
+
+                transition={{ delay: index * 0.1, duration: 0.6 }}
+
+                onMouseEnter={() => setHovered(social.id)}
+
+                onMouseLeave={() => setHovered(null)}
+
+                className="group relative flex w-full max-w-2xl items-center justify-between border-b border-white/10 py-8 transition-all hover:border-white/50 cursor-pointer"
+
+            >
+
+                <div className="flex items-center gap-6">
+
+                    <span className="text-xs font-mono text-gray-600 group-hover:text-purple-400 transition-colors">0{index + 1}</span>
+
+                    <span className="text-3xl font-bold text-gray-300 transition-all group-hover:translate-x-4 group-hover:text-white sm:text-4xl md:text-5xl">
+
+                        {social.name[lang]}
+
+                    </span>
+
+                </div>
+
+                
+
+                <div className="opacity-0 transition-all duration-300 -translate-x-10 group-hover:opacity-100 group-hover:translate-x-0 lg:block hidden">
+
+                    {social.type === 'qrcode' ? (
+
+                        <span className="text-sm uppercase tracking-widest text-gray-500">Scan</span>
+
+                    ) : (
+
+                        <ArrowUpRight className="h-8 w-8 text-white" />
+
+                    )}
+
+                </div>
+
+                 {/* Mobile Chevron Indicator */}
+
+                 <div className="lg:hidden text-gray-600">
+
+                    <ArrowUpRight className={`h-6 w-6 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+
+                 </div>
+
+            </motion.a>
+
+
+
+            {/* Mobile Accordion Details */}
+
+            <AnimatePresence>
+
+                {isExpanded && (
+
+                    <motion.div
+
+                        initial={{ height: 0, opacity: 0 }}
+
+                        animate={{ height: 'auto', opacity: 1 }}
+
+                        exit={{ height: 0, opacity: 0 }}
+
+                        className="overflow-hidden lg:hidden"
+
+                    >
+
+                        <div className="py-6 space-y-4 pl-12 border-b border-white/5">
+
+                            {social.type === 'qrcode' && (
+
+                                <div className="mb-4">
+
+                                    <img src={social.qrCode} alt="QR" className="w-32 h-32 object-contain bg-white p-2 rounded-lg" />
+
+                                </div>
+
+                            )}
+
+                            {social.details && social.details[lang].map((p, i) => (
+
+                                <p key={i} className="text-gray-400 text-sm leading-relaxed">{p}</p>
+
+                            ))}
+
+                            {social.url && social.type === 'link' && (
+
+                                <a href={social.url} target="_blank" className="text-purple-400 text-sm font-medium flex items-center gap-2 mt-2">
+
+                                    Visit Link <ArrowUpRight className="h-3 w-3" />
+
+                                </a>
+
+                            )}
+
+                        </div>
+
+                    </motion.div>
+
                 )}
-            </div>
-        </motion.a>
+
+            </AnimatePresence>
+
+        </div>
+
     )
+
 }
