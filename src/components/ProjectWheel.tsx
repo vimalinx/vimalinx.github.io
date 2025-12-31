@@ -112,16 +112,16 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
     >
       
       {/* 1. Left Side: Immersive Background & Content */}
-      <motion.div 
+      <motion.div
         variants={{
             hidden: { opacity: 0, x: -50 },
-            visible: { 
-                opacity: 1, 
+            visible: {
+                opacity: 1,
                 x: 0,
                 transition: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }
             }
         }}
-        className="relative h-1/2 w-full md:h-full md:w-2/3 lg:w-3/4 overflow-hidden"
+        className="relative h-[55%] w-full md:h-full md:w-2/3 lg:w-3/4 overflow-hidden"
       >
         
         {/* Background Base */}
@@ -154,8 +154,31 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
             )}
         </div>
 
+        {/* Mobile Image Gallery (Mobile Only) */}
+        <div className="md:hidden absolute bottom-0 left-0 right-0 z-10 h-[40%] bg-gradient-to-t from-black via-black/80 to-transparent">
+            <AnimatePresence mode="wait">
+                {currentProject.gallery && currentProject.gallery.length > 0 && (
+                    <motion.div
+                        key={`mobile-gallery-${activeIndex}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="relative h-full w-full"
+                    >
+                        <img
+                            src={currentProject.gallery[0]}
+                            alt={`${currentProject.title} preview`}
+                            className="h-full w-full object-cover object-top"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+
         {/* Gradient Mask: Left-to-Right Fade for Text Readability */}
-        <div className="absolute inset-y-0 left-0 w-[80%] z-10 pointer-events-none bg-gradient-to-r from-black via-black/60 to-transparent" />
+        <div className="absolute inset-y-0 left-0 w-[80%] z-10 pointer-events-none bg-gradient-to-r from-black via-black/60 to-transparent md:bg-gradient-to-r" />
 
         {/* Content Overlay */}
         <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 md:justify-center md:p-16 lg:p-24 pointer-events-none">
@@ -207,65 +230,89 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
                 ))}
               </div>
             </div>
-
-            {/* Mobile Navigation Controls (Hidden on Desktop) */}
-            <div className="mt-8 flex flex-col gap-6 lg:hidden">
-                {/* Progress Indicator */}
-                <div className="flex items-center justify-center gap-2">
-                    {config.projects.map((_, idx) => (
-                        <button
-                            key={idx}
-                            onClick={(e) => { e.stopPropagation(); triggerSwitch(idx); }}
-                            className={`h-1 rounded-full transition-all duration-300 ${
-                                idx === activeIndex
-                                    ? 'w-8 bg-white'
-                                    : 'w-2 bg-white/30'
-                            }`}
-                        />
-                    ))}
-                </div>
-
-                {/* Navigation Buttons */}
-                <div className="flex items-center justify-center gap-4">
-                    <button
-                        onClick={(e) => { e.stopPropagation(); triggerSwitch(activeIndex === 0 ? config.projects.length - 1 : activeIndex - 1); }}
-                        className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md active:scale-95 transition-all hover:bg-white/10"
-                    >
-                        <ChevronLeft className="h-6 w-6" />
-                    </button>
-                    <div className="flex flex-col items-center">
-                        <span className="text-2xl font-bold text-white">
-                            {String(activeIndex + 1).padStart(2, '0')}
-                        </span>
-                        <span className="text-xs text-gray-500 font-mono">
-                            / {String(config.projects.length).padStart(2, '0')}
-                        </span>
-                    </div>
-                    <button
-                        onClick={(e) => { e.stopPropagation(); triggerSwitch(activeIndex === config.projects.length - 1 ? 0 : activeIndex + 1); }}
-                        className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md active:scale-95 transition-all hover:bg-white/10"
-                    >
-                        <ChevronRight className="h-6 w-6" />
-                    </button>
-                </div>
-
-                {/* Project Name Indicator */}
-                <motion.div
-                    key={currentProject.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-center"
-                >
-                    <span className="text-sm font-medium text-purple-400">
-                        {currentProject.title}
-                    </span>
-                </motion.div>
-            </div>
           </motion.div>
         </div>
                   </motion.div>
             
-                              {/* 2. Right Side: The Wheel Control */}
+                              {/* 2. Right Side: The Wheel Control (Desktop) & Mobile Controls Area */}
+                  <motion.div
+                    variants={{
+                        hidden: { opacity: 0, scale: 0.8, x: 50 },
+                        visible: {
+                            opacity: 1,
+                            scale: 1,
+                            x: 0,
+                            transition: { duration: 0.8, ease: [0.34, 1.56, 0.64, 1] }
+                        }
+                    }}
+                    className="relative h-[45%] w-full md:hidden flex flex-col justify-between p-6 bg-gradient-to-b from-black/50 to-black"
+                  >
+                    {/* Mobile Project Info */}
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <span className="text-xs text-gray-500 uppercase tracking-widest">Current Project</span>
+                            <motion.div
+                                key={currentProject.id}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="text-lg font-bold text-white mt-1"
+                            >
+                                {currentProject.title}
+                            </motion.div>
+                        </div>
+                        <div className="text-right">
+                            <span className="text-3xl font-bold text-white">
+                                {String(activeIndex + 1).padStart(2, '0')}
+                            </span>
+                            <span className="text-xs text-gray-500 block">
+                                / {String(config.projects.length).padStart(2, '0')}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Progress Dots */}
+                    <div className="flex items-center justify-center gap-3 py-4">
+                        {config.projects.map((_, idx) => (
+                            <button
+                                key={idx}
+                                onClick={(e) => { e.stopPropagation(); triggerSwitch(idx); }}
+                                className={`transition-all duration-300 ${
+                                    idx === activeIndex
+                                        ? 'w-12 h-1.5 bg-white rounded-full'
+                                        : 'w-2 h-1.5 bg-white/30 rounded-full'
+                                }`}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Navigation Buttons */}
+                    <div className="flex items-center justify-center gap-6">
+                        <button
+                            onClick={(e) => { e.stopPropagation(); triggerSwitch(activeIndex === 0 ? config.projects.length - 1 : activeIndex - 1); }}
+                            className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-white/20 bg-white/5 text-white backdrop-blur-md active:scale-95 transition-all hover:bg-white/10 hover:border-white/40"
+                        >
+                            <ChevronLeft className="h-7 w-7" />
+                        </button>
+                        <div className="flex flex-col items-center">
+                            <span className="text-xs text-gray-500 uppercase tracking-widest mb-1">
+                                {lang === 'zh' ? '滑动切换' : 'Swipe'}
+                            </span>
+                            <div className="flex items-center gap-1">
+                                <div className="w-1 h-1 bg-white/30 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                <div className="w-1 h-1 bg-white/30 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                                <div className="w-1 h-1 bg-white/30 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                            </div>
+                        </div>
+                        <button
+                            onClick={(e) => { e.stopPropagation(); triggerSwitch(activeIndex === config.projects.length - 1 ? 0 : activeIndex + 1); }}
+                            className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-white/20 bg-white/5 text-white backdrop-blur-md active:scale-95 transition-all hover:bg-white/10 hover:border-white/40"
+                        >
+                            <ChevronRight className="h-7 w-7" />
+                        </button>
+                    </div>
+                  </motion.div>
+
+                  {/* Desktop Wheel Control */}
                   <motion.div
                     variants={{
                         hidden: { opacity: 0, scale: 0.8, x: 50 },
