@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { config, type Language } from '../config';
 import { cn } from '../lib/utils';
+import { FloatingGallery } from './FloatingGallery';
 
 interface ProjectWheelProps {
   lang: Language;
@@ -11,21 +12,20 @@ interface ProjectWheelProps {
 export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { amount: 0.3 }); // Detect visibility
   const isAnimating = useRef(false);
-  const exitLocked = useRef(true); // Default locked when entering or changing index
+  const exitLocked = useRef(true); 
   
-  // Reset exit lock whenever active index changes
   useEffect(() => {
       exitLocked.current = true;
   }, [activeIndex]);
 
-  // Wheel configuration
   const radius = 350; 
   const itemAngle = 30; 
   const wheelRotation = 180 - activeIndex * itemAngle;
   const currentProject = config.projects[activeIndex];
 
-  // Smart Scroll Handler
+  // Smart Scroll Handler... (omitted for brevity, keep existing)
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -34,39 +34,23 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
       const isScrollingDown = e.deltaY > 0;
       const isScrollingUp = e.deltaY < 0;
 
-      // 1. Boundary Check: Last Item Downward Scroll (The 0.6s Delay Logic)
       if (isScrollingDown && activeIndex === config.projects.length - 1) {
           if (exitLocked.current) {
-              // First time trying to exit? Block it and start timer.
               e.preventDefault();
               e.stopPropagation();
-              
-              // Only start unlock timer if not already doing something? 
-              // Actually, we just set a timeout to unlock it.
-              // To avoid spamming timeouts, we could check if a timer is active, but simple is fine here.
-              setTimeout(() => {
-                  exitLocked.current = false;
-              }, 600); // 0.6s delay
+              setTimeout(() => { exitLocked.current = false; }, 600);
               return;
           }
-          // If exitLocked is false, let it bubble (allow exit)
           return;
       }
+      if (isScrollingUp && activeIndex === 0) return; 
 
-      // 2. Boundary Check: First Item Upward Scroll
-      if (isScrollingUp && activeIndex === 0) {
-          // Immediate exit for top, or same logic? Usually top doesn't need delay.
-          return; 
-      }
-
-      // 3. Animation Lock for Internal Switching
       if (isAnimating.current) {
           e.preventDefault();
           e.stopPropagation();
           return;
       }
 
-      // 4. Internal Switching
       if (isScrollingDown && activeIndex < config.projects.length - 1) {
         e.preventDefault();
         e.stopPropagation();
@@ -78,7 +62,6 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
       }
     };
 
-    // Passive: false is required to use preventDefault
     container.addEventListener('wheel', handleWheel, { passive: false });
     return () => container.removeEventListener('wheel', handleWheel);
   }, [activeIndex]);
@@ -86,17 +69,46 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
   const triggerSwitch = (newIndex: number) => {
     isAnimating.current = true;
     setActiveIndex(newIndex);
-    // Lock interaction for a short duration to match animation
     setTimeout(() => {
         isAnimating.current = false;
     }, 600);
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+        opacity: 1,
+        transition: { 
+            staggerChildren: 0.3,
+            delayChildren: 0.2
+        }
+    }
+  };
+
   return (
-    <div ref={containerRef} className="relative h-screen w-full overflow-hidden bg-black flex flex-col md:flex-row">
+    <motion.div 
+        ref={containerRef} 
+        className="relative h-screen w-full overflow-hidden bg-black flex flex-col md:flex-row"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: false, amount: 0.3 }}
+    >
       
       {/* 1. Left Side: Immersive Background & Content */}
-      <div className="relative h-1/2 w-full md:h-full md:w-2/3 lg:w-3/4">
+      <motion.div 
+        variants={{
+            hidden: { opacity: 0, x: -50 },
+            visible: { 
+                opacity: 1, 
+                x: 0,
+                transition: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }
+            }
+        }}
+        className="relative h-1/2 w-full md:h-full md:w-2/3 lg:w-3/4 overflow-hidden"
+      >
+        
+        {/* Background Base */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentProject.id}
@@ -106,36 +118,38 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
             transition={{ duration: 0.8 }}
             className="absolute inset-0 z-0"
           >
-            {/* Background Image / Gradient */}
             <div 
-              className="h-full w-full bg-cover bg-center transition-all duration-700 ease-in-out"
+              className="h-full w-full bg-cover bg-center transition-all duration-700 ease-in-out blur-xl opacity-50 scale-110" // Blurred background for gallery contrast
               style={{ 
                 background: currentProject.image.includes('gradient') 
                   ? currentProject.image 
                   : `url(${currentProject.image})`,
-                backgroundSize: 'cover'
               }} 
             />
-            
-            {/* Overlay Gradient: Left to Right Transparency (Left solid image -> Right fades to black) */}
-            {/* Actually, the user wants "Left to Right transparency increases" -> Left shows image, Right shows content/black? 
-               User said: "Left side displays project image, transparency increases from left to right" 
-               So Left = Visible Image, Right = Faded/Black to merge with wheel area.
-            */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/60 to-black" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/40 to-black" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent md:bg-none" />
           </motion.div>
         </AnimatePresence>
+        
+        {/* Floating Gallery (Desktop Only) - Placed behind text */}
+        <div className="hidden md:block absolute inset-0 z-10">
+            {isInView && (
+                <FloatingGallery images={currentProject.gallery || []} activeIndex={activeIndex} />
+            )}
+        </div>
+
+        {/* Gradient Mask: Left-to-Right Fade for Text Readability */}
+        <div className="absolute inset-y-0 left-0 w-[80%] z-15 pointer-events-none bg-gradient-to-r from-black via-black/60 to-transparent" />
 
         {/* Content Overlay */}
-        <div className="absolute inset-0 z-10 flex flex-col justify-end p-8 md:justify-center md:p-16 lg:p-24">
+        <div className="absolute inset-0 z-20 flex flex-col justify-end p-8 md:justify-center md:p-16 lg:p-24 pointer-events-none">
           <motion.div
             key={currentProject.id + "-text"}
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="max-w-2xl"
+            className="max-w-2xl pointer-events-auto"
           >
             <div className="mb-4 flex items-center gap-3">
               <div className={cn("flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-md", 
@@ -154,7 +168,7 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
               {currentProject.title}
             </h2>
 
-            <p className="mb-8 text-lg text-gray-300 md:text-xl leading-relaxed max-w-lg">
+            <p className="mb-8 text-lg text-gray-300 md:text-xl leading-relaxed max-w-lg whitespace-pre-line">
               {currentProject.description[lang]}
             </p>
 
@@ -198,11 +212,21 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
             </div>
           </motion.div>
         </div>
-      </div>
-
-            {/* 2. Right Side: The Wheel Control */}
-            <div className="relative hidden h-full w-1/3 md:block lg:w-1/4">
-               {/* The Semicircle Container */}
+                  </motion.div>
+            
+                  {/* 2. Right Side: The Wheel Control */}
+                  <motion.div 
+                    variants={{
+                        hidden: { opacity: 0, scale: 0.8, x: 50 },
+                        visible: { 
+                            opacity: 1, 
+                            scale: 1, 
+                            x: 0,
+                            transition: { duration: 0.8, ease: [0.34, 1.56, 0.64, 1] }
+                        }
+                    }}
+                    className="relative hidden h-full w-1/3 md:block lg:w-1/4"
+                  >               {/* The Semicircle Container */}
                <div 
                   className="absolute right-0 top-1/2 flex items-center justify-center"
                   style={{ 
@@ -286,7 +310,7 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
                 <div className="h-2 w-2 rounded-full bg-white shadow-[0_0_10px_white]" />
             </div>
          </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };

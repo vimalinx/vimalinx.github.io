@@ -1,4 +1,4 @@
-import { Github, Smartphone, BookOpen, GraduationCap, Gift, Database, Layout } from 'lucide-react';
+import { Github, Smartphone, BookOpen, GraduationCap, Gift, Database } from 'lucide-react';
 
 export type Language = 'zh' | 'en';
 
@@ -21,13 +21,19 @@ export const config = {
       id: 'cybergift',
       title: "CyberGift",
       description: {
-        zh: "粒子世界的极致浪漫 · 永久封存的数字誓言",
-        en: "The ultimate romantic experience in the particle world. A permanent digital vow."
+        zh: "粒子世界的极致浪漫 · 永久封存的数字誓言\n搭配数字贺卡，传递你的心语",
+        en: "The ultimate romantic experience in the particle world. A permanent digital vow.\nWith digital cards, you can express your love in a more permanent way."
       },
       url: "https://cybergift.store",
       tags: ["E-Commerce", "Futuristic", "Web3"],
       icon: Gift,
-      image: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)", // Placeholder for actual image
+      image: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
+      gallery: [
+        "/cybergift-1.png",
+        "/cybergift-2.png",
+        "/cybergift-3.png",
+        "/cybergift-4.png"
+      ],
       accent: "from-purple-500 to-indigo-500",
       status: "Live",
     },
@@ -35,13 +41,17 @@ export const config = {
       id: 'tiku',
       title: "Tiku",
       description: {
-        zh: "给学会计的老婆的刷题系统，爱你宝贝(可能还会加哦)",
+        zh: "给学会计的老婆的刷题系统，内置缓存错题本和随机抽题考试功能，爱你宝贝(可能还会加哦)",
         en: "A practice question system for my wife who is studying accounting, love you baby (might add more later)"
       },
       url: "https://vimalinx.xyz/tiku",
       tags: ["Education", "Algorithm", "SaaS"],
       icon: Database,
       image: "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)",
+      gallery: [
+        "/tiku-2.png",
+        "/tiku-1.png"
+      ],
       accent: "from-emerald-500 to-teal-500",
       status: "Live",
     },
@@ -56,6 +66,12 @@ export const config = {
       tags: ["Productivity", "Flow State", "App"],
       icon: GraduationCap,
       image: "linear-gradient(135deg, #23074d 0%, #cc5333 100%)",
+      gallery: [
+        "/flowstudy-1.png",
+        "/flowstudy-2.png",
+        "/flowstudy-3.png",
+        "/flowstudy-4.png"
+      ],
       accent: "from-orange-500 to-red-500",
       status: "Concept",
     },
@@ -69,7 +85,13 @@ export const config = {
       url: "https://github.com/vimalinx/CogniRead", 
       tags: ["Productivity", "Flow State", "App"],
       icon: BookOpen,
-      image: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)", // Placeholder for actual image
+      image: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
+      gallery: [
+        "/cogniread-1.png",
+        "/cogniread-2.png",
+        "/cogniread-3.png",
+        "/cogniread-4.png"
+      ],
       accent: "from-purple-500 to-indigo-500",
       status: "Live",
     }
