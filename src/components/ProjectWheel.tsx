@@ -11,13 +11,19 @@ interface ProjectWheelProps {
 
 export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
   const [activeIndex, setActiveIndex] = useState(0); // Start with CyberGift (index 0)
+  const [activeImageIndex, setActiveImageIndex] = useState(0); // For mobile image carousel
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { amount: 0.3 }); // Detect visibility
   const isAnimating = useRef(false);
-  const exitLocked = useRef(true); 
+  const exitLocked = useRef(true);
+
+  // Touch handling for mobile swipe
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null); 
   
   useEffect(() => {
       exitLocked.current = true;
+      // Reset image index when switching projects
+      setActiveImageIndex(0);
   }, [activeIndex]);
 
   const radius = 350;
@@ -80,6 +86,68 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
 
     container.addEventListener('wheel', handleWheel, { passive: false });
     return () => container.removeEventListener('wheel', handleWheel);
+  }, [activeIndex]);
+
+  // Touch swipe handling for mobile
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartRef.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      };
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      // Prevent default only if we're handling the swipe
+      if (!touchStartRef.current) return;
+
+      const deltaX = e.touches[0].clientX - touchStartRef.current.x;
+      const deltaY = e.touches[0].clientY - touchStartRef.current.y;
+
+      // Only intercept horizontal swipes
+      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30) {
+        // Don't prevent default - let page scroll work for vertical movements
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!touchStartRef.current) return;
+
+      const deltaX = e.changedTouches[0].clientX - touchStartRef.current.x;
+      const deltaY = e.changedTouches[0].clientY - touchStartRef.current.y;
+
+      // Check if it's a horizontal swipe (not vertical scroll)
+      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+        // It's a horizontal swipe
+
+        if (deltaX > 0) {
+          // Swipe right -> Previous project
+          if (activeIndex > 0) {
+            triggerSwitch(activeIndex - 1);
+          }
+        } else {
+          // Swipe left -> Next project
+          if (activeIndex < config.projects.length - 1) {
+            triggerSwitch(activeIndex + 1);
+          }
+        }
+      }
+
+      touchStartRef.current = null;
+    };
+
+    container.addEventListener('touchstart', handleTouchStart, { passive: true });
+    container.addEventListener('touchmove', handleTouchMove, { passive: true });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd);
+    };
   }, [activeIndex]);
 
   const triggerSwitch = (newIndex: number) => {
@@ -155,23 +223,80 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
         </div>
 
         {/* Mobile Image Gallery (Mobile Only) */}
-        <div className="md:hidden absolute bottom-0 left-0 right-0 z-10 h-[40%] bg-gradient-to-t from-black via-black/80 to-transparent">
+        <div
+          className="md:hidden absolute bottom-0 left-0 right-0 z-10 h-[40%] bg-gradient-to-t from-black via-black/80 to-transparent"
+          onTouchStart={(e) => {
+            touchStartRef.current = {
+              x: e.touches[0].clientX,
+              y: e.touches[0].clientY,
+            };
+          }}
+          onTouchEnd={(e) => {
+            if (!touchStartRef.current || !currentProject.gallery) return;
+            if (currentProject.gallery.length <= 1) return;
+
+            const deltaX = e.changedTouches[0].clientX - touchStartRef.current.x;
+            const deltaY = e.changedTouches[0].clientY - touchStartRef.current.y;
+
+            // Check if it's a horizontal swipe on images
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+              if (deltaX > 0 && activeImageIndex > 0) {
+                // Swipe right -> Previous image
+                setActiveImageIndex(activeImageIndex - 1);
+              } else if (deltaX < 0 && activeImageIndex < currentProject.gallery.length - 1) {
+                // Swipe left -> Next image
+                setActiveImageIndex(activeImageIndex + 1);
+              }
+            }
+
+            touchStartRef.current = null;
+          }}
+        >
             <AnimatePresence mode="wait">
                 {currentProject.gallery && currentProject.gallery.length > 0 && (
                     <motion.div
-                        key={`mobile-gallery-${activeIndex}`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.5 }}
+                        key={`mobile-gallery-${activeIndex}-${activeImageIndex}`}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -50 }}
+                        transition={{ duration: 0.3 }}
                         className="relative h-full w-full"
                     >
                         <img
-                            src={currentProject.gallery[0]}
-                            alt={`${currentProject.title} preview`}
+                            src={currentProject.gallery[activeImageIndex]}
+                            alt={`${currentProject.title} preview ${activeImageIndex + 1}`}
                             className="h-full w-full object-cover object-top"
+                            draggable={false}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+
+                        {/* Image Counter & Dots */}
+                        {currentProject.gallery.length > 1 && (
+                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full px-4 py-2">
+                                {currentProject.gallery.map((_, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setActiveImageIndex(idx);
+                                        }}
+                                        className={`transition-all duration-300 ${
+                                            idx === activeImageIndex
+                                                ? 'w-6 h-1.5 bg-white rounded-full'
+                                                : 'w-1.5 h-1.5 bg-white/40 rounded-full'
+                                        }`}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Swipe Hints */}
+                        {currentProject.gallery.length > 1 && (
+                            <>
+                                <div className="absolute left-2 top-1/2 -translate-y-1/2 text-white/30 text-2xl pointer-events-none">‹</div>
+                                <div className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 text-2xl pointer-events-none">›</div>
+                            </>
+                        )}
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -295,12 +420,12 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
                         </button>
                         <div className="flex flex-col items-center">
                             <span className="text-xs text-gray-500 uppercase tracking-widest mb-1">
-                                {lang === 'zh' ? '滑动切换' : 'Swipe'}
+                                {lang === 'zh' ? '左右滑动' : 'Swipe'}
                             </span>
                             <div className="flex items-center gap-1">
-                                <div className="w-1 h-1 bg-white/30 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                                <div className="w-1 h-1 bg-white/30 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                                <div className="w-1 h-1 bg-white/30 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                                <span className="text-white/40 text-lg">←</span>
+                                <div className="w-1 h-1 bg-white/30 rounded-full animate-pulse" />
+                                <span className="text-white/40 text-lg">→</span>
                             </div>
                         </div>
                         <button
