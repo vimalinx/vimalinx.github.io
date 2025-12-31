@@ -158,7 +158,7 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
         <div className="absolute inset-y-0 left-0 w-[80%] z-10 pointer-events-none bg-gradient-to-r from-black via-black/60 to-transparent" />
 
         {/* Content Overlay */}
-        <div className="absolute inset-0 z-20 flex flex-col justify-end p-8 md:justify-center md:p-16 lg:p-24 pointer-events-none">
+        <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 md:justify-center md:p-16 lg:p-24 pointer-events-none">
           <motion.div
             key={currentProject.id + "-text"}
             initial={{ opacity: 0, x: -50 }}
@@ -180,28 +180,28 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
               </span>
             </div>
 
-            <h2 className="mb-4 text-4xl font-black tracking-tight text-white md:text-6xl lg:text-7xl">
+            <h2 className="mb-4 text-3xl font-black tracking-tight text-white sm:text-4xl md:text-6xl lg:text-7xl">
               {currentProject.title}
             </h2>
 
-            <p className="mb-8 text-lg text-gray-300 md:text-xl leading-relaxed max-w-lg whitespace-pre-line">
+            <p className="mb-6 text-base text-gray-300 md:text-xl leading-relaxed max-w-lg whitespace-pre-line sm:text-lg">
               {currentProject.description[lang]}
             </p>
 
-            <div className="flex flex-wrap gap-4">
-              <a 
-                href={currentProject.url} 
-                target="_blank" 
+            <div className="flex flex-wrap gap-3 sm:gap-4">
+              <a
+                href={currentProject.url}
+                target="_blank"
                 rel="noreferrer"
-                className="group flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-black transition-all hover:bg-gray-200"
+                className="group flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition-all hover:bg-gray-200 sm:px-6 sm:py-3"
               >
                 {lang === 'zh' ? '访问项目' : 'Visit Project'}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </a>
-              
+
               <div className="flex gap-2">
                 {currentProject.tags.map(tag => (
-                   <span key={tag} className="flex items-center rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm text-gray-400 backdrop-blur-md">
+                   <span key={tag} className="flex items-center rounded-full border border-white/10 bg-black/40 px-3 py-1.5 text-xs text-gray-400 backdrop-blur-md sm:px-4 sm:py-2 sm:text-sm">
                      {tag}
                    </span>
                 ))}
@@ -209,34 +209,69 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
             </div>
 
             {/* Mobile Navigation Controls (Hidden on Desktop) */}
-            <div className="mt-8 flex items-center gap-4 lg:hidden">
-                <button 
-                    onClick={(e) => { e.stopPropagation(); triggerSwitch(activeIndex === 0 ? config.projects.length - 1 : activeIndex - 1); }}
-                    className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black/40 text-white backdrop-blur-md active:scale-95"
+            <div className="mt-8 flex flex-col gap-6 lg:hidden">
+                {/* Progress Indicator */}
+                <div className="flex items-center justify-center gap-2">
+                    {config.projects.map((_, idx) => (
+                        <button
+                            key={idx}
+                            onClick={(e) => { e.stopPropagation(); triggerSwitch(idx); }}
+                            className={`h-1 rounded-full transition-all duration-300 ${
+                                idx === activeIndex
+                                    ? 'w-8 bg-white'
+                                    : 'w-2 bg-white/30'
+                            }`}
+                        />
+                    ))}
+                </div>
+
+                {/* Navigation Buttons */}
+                <div className="flex items-center justify-center gap-4">
+                    <button
+                        onClick={(e) => { e.stopPropagation(); triggerSwitch(activeIndex === 0 ? config.projects.length - 1 : activeIndex - 1); }}
+                        className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md active:scale-95 transition-all hover:bg-white/10"
+                    >
+                        <ChevronLeft className="h-6 w-6" />
+                    </button>
+                    <div className="flex flex-col items-center">
+                        <span className="text-2xl font-bold text-white">
+                            {String(activeIndex + 1).padStart(2, '0')}
+                        </span>
+                        <span className="text-xs text-gray-500 font-mono">
+                            / {String(config.projects.length).padStart(2, '0')}
+                        </span>
+                    </div>
+                    <button
+                        onClick={(e) => { e.stopPropagation(); triggerSwitch(activeIndex === config.projects.length - 1 ? 0 : activeIndex + 1); }}
+                        className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md active:scale-95 transition-all hover:bg-white/10"
+                    >
+                        <ChevronRight className="h-6 w-6" />
+                    </button>
+                </div>
+
+                {/* Project Name Indicator */}
+                <motion.div
+                    key={currentProject.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center"
                 >
-                    <ChevronLeft className="h-6 w-6" />
-                </button>
-                <button 
-                    onClick={(e) => { e.stopPropagation(); triggerSwitch(activeIndex === config.projects.length - 1 ? 0 : activeIndex + 1); }}
-                    className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black/40 text-white backdrop-blur-md active:scale-95"
-                >
-                    <ChevronRight className="h-6 w-6" />
-                </button>
-                <span className="text-xs text-gray-500 font-mono">
-                    {activeIndex + 1} / {config.projects.length}
-                </span>
+                    <span className="text-sm font-medium text-purple-400">
+                        {currentProject.title}
+                    </span>
+                </motion.div>
             </div>
           </motion.div>
         </div>
                   </motion.div>
             
-                  {/* 2. Right Side: The Wheel Control */}
-                  <motion.div 
+                              {/* 2. Right Side: The Wheel Control */}
+                  <motion.div
                     variants={{
                         hidden: { opacity: 0, scale: 0.8, x: 50 },
-                        visible: { 
-                            opacity: 1, 
-                            scale: 1, 
+                        visible: {
+                            opacity: 1,
+                            scale: 1,
                             x: 0,
                             transition: { duration: 0.8, ease: [0.34, 1.56, 0.64, 1] }
                         }

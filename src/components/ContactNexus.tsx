@@ -37,23 +37,23 @@ export const ContactNexus = ({ lang }: ContactNexusProps) => {
       <div className="absolute bottom-[-20%] left-[-10%] h-[600px] w-[600px] rounded-full bg-blue-900/10 blur-[100px] pointer-events-none" />
 
       {/* Header */}
-      <div className="z-10 mt-12">
-        <motion.div 
+      <div className="z-10 mt-8 sm:mt-12">
+        <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="flex items-center gap-4"
         >
-            <div className="h-px w-12 bg-white/50" />
-            <span className="text-sm font-medium uppercase tracking-[0.2em] text-gray-400">
+            <div className="h-px w-8 bg-white/50 sm:w-12" />
+            <span className="text-xs font-medium uppercase tracking-[0.2em] text-gray-400 sm:text-sm">
                 {lang === 'zh' ? '联系' : 'Contact'}
             </span>
         </motion.div>
-        <motion.h1 
+        <motion.h1
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="mt-8 max-w-4xl text-6xl font-black uppercase leading-[0.9] tracking-tighter text-white sm:text-7xl md:text-8xl lg:text-9xl"
+            className="mt-6 max-w-4xl text-5xl font-black uppercase leading-[0.9] tracking-tighter text-white sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl"
         >
             {lang === 'zh' ? '保持' : 'Let\'s'}<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-white">
@@ -63,17 +63,17 @@ export const ContactNexus = ({ lang }: ContactNexusProps) => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="z-10 flex flex-col md:flex-row md:items-end justify-between w-full h-full pb-12">
-        
+      <div className="z-10 flex flex-col md:flex-row md:items-end justify-between w-full h-full pb-8 sm:pb-12">
+
         {/* Left Side: The List */}
-        <div className="flex flex-col items-start gap-4 mt-12 md:mt-0 w-full md:max-w-xl lg:max-w-2xl">
+        <div className="flex flex-col items-start gap-2 mt-6 md:mt-0 w-full md:max-w-xl lg:max-w-2xl">
             {config.socials.map((social, index) => (
-            <ListItem 
-                key={social.id} 
-                social={social} 
-                index={index} 
-                lang={lang} 
-                setHovered={setHoveredSocial} 
+            <ListItem
+                key={social.id}
+                social={social}
+                index={index}
+                lang={lang}
+                setHovered={setHoveredSocial}
             />
             ))}
         </div>
@@ -184,11 +184,11 @@ export const ContactNexus = ({ lang }: ContactNexusProps) => {
         </h2>
       </div>
 
-      <footer className="z-10 flex w-full items-end justify-between border-t border-white/10 pt-8 text-sm text-gray-600">
+      <footer className="z-10 flex w-full items-end justify-between border-t border-white/10 pt-6 pb-4 sm:pt-8 text-xs sm:text-sm text-gray-600">
         <div>
            <p>© {new Date().getFullYear()} {config.profile.englishName}</p>
         </div>
-        <div className="flex gap-6">
+        <div className="hidden sm:flex gap-4 sm:gap-6">
             <span className="hover:text-white cursor-pointer transition-colors">Twitter</span>
             <span className="hover:text-white cursor-pointer transition-colors">Email</span>
         </div>
@@ -255,15 +255,15 @@ const ListItem = ({ social, index, lang, setHovered }: {
 
                 onMouseLeave={() => setHovered(null)}
 
-                className="group relative flex w-full max-w-2xl items-center justify-between border-b border-white/10 py-8 transition-all hover:border-white/50 cursor-pointer"
+                className="group relative flex w-full max-w-2xl items-center justify-between border-b border-white/10 py-5 sm:py-6 md:py-8 transition-all hover:border-white/50 cursor-pointer"
 
             >
 
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-4 sm:gap-6">
 
                     <span className="text-xs font-mono text-gray-600 group-hover:text-purple-400 transition-colors">0{index + 1}</span>
 
-                    <span className="text-3xl font-bold text-gray-300 transition-all group-hover:translate-x-4 group-hover:text-white sm:text-4xl md:text-5xl">
+                    <span className="text-xl font-bold text-gray-300 transition-all group-hover:translate-x-2 sm:group-hover:translate-x-4 group-hover:text-white sm:text-2xl md:text-4xl lg:text-5xl">
 
                         {social.name[lang]}
 
@@ -271,7 +271,7 @@ const ListItem = ({ social, index, lang, setHovered }: {
 
                 </div>
 
-                
+
 
                 <div className="opacity-0 transition-all duration-300 -translate-x-10 group-hover:opacity-100 group-hover:translate-x-0 lg:block hidden">
 
@@ -291,7 +291,7 @@ const ListItem = ({ social, index, lang, setHovered }: {
 
                  <div className="lg:hidden text-gray-600">
 
-                    <ArrowUpRight className={`h-6 w-6 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                    <ArrowUpRight className={`h-5 w-5 sm:h-6 sm:w-6 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
 
                  </div>
 
@@ -317,13 +317,13 @@ const ListItem = ({ social, index, lang, setHovered }: {
 
                     >
 
-                        <div className="py-6 space-y-4 pl-12 border-b border-white/5">
+                        <div className="py-4 sm:py-6 space-y-3 sm:space-y-4 pl-10 sm:pl-12 border-b border-white/5">
 
                             {social.type === 'qrcode' && (
 
-                                <div className="mb-4">
+                                <div className="mb-2">
 
-                                    <img src={social.qrCode} alt="QR" className="w-32 h-32 object-contain bg-white p-2 rounded-lg" />
+                                    <img src={social.qrCode} alt="QR" className="w-28 h-28 sm:w-32 sm:h-32 object-contain bg-white p-2 rounded-lg" />
 
                                 </div>
 
@@ -331,7 +331,7 @@ const ListItem = ({ social, index, lang, setHovered }: {
 
                             {social.details && social.details[lang].map((p, i) => (
 
-                                <p key={i} className="text-gray-400 text-sm leading-relaxed">{p}</p>
+                                <p key={i} className="text-gray-400 text-sm leading-relaxed sm:text-base">{p}</p>
 
                             ))}
 
@@ -339,7 +339,7 @@ const ListItem = ({ social, index, lang, setHovered }: {
 
                                 <a href={social.url} target="_blank" className="text-purple-400 text-sm font-medium flex items-center gap-2 mt-2">
 
-                                    Visit Link <ArrowUpRight className="h-3 w-3" />
+                                    {lang === 'zh' ? '访问链接' : 'Visit Link'} <ArrowUpRight className="h-3 w-3" />
 
                                 </a>
 
