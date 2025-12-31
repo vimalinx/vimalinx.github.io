@@ -1,4 +1,4 @@
-import { Github, Smartphone, BookOpen, Gift, Database, Layout } from 'lucide-react';
+import { Github, Smartphone, BookOpen, GraduationCap, Gift, Database, Layout } from 'lucide-react';
 
 export type Language = 'zh' | 'en';
 
@@ -7,12 +7,12 @@ export const config = {
     name: "七叶怀瑾",
     englishName: "Vimalinx",
     title: {
-      zh: "全栈开发者 & 创意构建者",
-      en: "Full Stack Developer & Creator"
+      zh: "个人开发者 & 终身学习者 & AI 发烧友",
+      en: "Personal Developer & Lifelong Learner & AI Enthusiast"
     },
     bio: {
-      zh: "探索代码与艺术的边界。构建有呼吸感的数字体验。",
-      en: "Exploring the boundary between code and art. Building digital experiences that breathe."
+      zh: "一个对技术和创意有无限热情的个人开发者，写点好玩的好看的小东西",
+      en: "A passionate personal developer with an insatiable love for technology and creativity. Building fun and beautiful things."
     },
     avatar: "/avatar-placeholder.png", 
   },
@@ -21,8 +21,8 @@ export const config = {
       id: 'cybergift',
       title: "CyberGift",
       description: {
-        zh: "未来主义数字礼物平台。为现代纪元策划独特的虚拟赠礼体验，打破物理世界的馈赠限制。",
-        en: "A futuristic digital gifting platform. Curating unique virtual experiences for the modern era."
+        zh: "粒子世界的极致浪漫 · 永久封存的数字誓言",
+        en: "The ultimate romantic experience in the particle world. A permanent digital vow."
       },
       url: "https://cybergift.store",
       tags: ["E-Commerce", "Futuristic", "Web3"],
@@ -35,8 +35,8 @@ export const config = {
       id: 'tiku',
       title: "Tiku",
       description: {
-        zh: "专为高效学习设计的智能题库系统。通过算法优化知识留存率，让刷题不再是机械重复。",
-        en: "Intelligent question bank designed for efficient learning. optimizing retention through algorithms."
+        zh: "给学会计的老婆的刷题系统，爱你宝贝(可能还会加哦)",
+        en: "A practice question system for my wife who is studying accounting, love you baby (might add more later)"
       },
       url: "https://vimalinx.xyz/tiku",
       tags: ["Education", "Algorithm", "SaaS"],
@@ -49,30 +49,30 @@ export const config = {
       id: 'flowstudy',
       title: "FlowStudy",
       description: {
-        zh: "专注于心流状态的沉浸式学习环境。融合番茄工作法与白噪音，打造极致专注空间。",
-        en: "An immersive study environment focused on flow state. Merging pomodoro with ambient soundscapes."
+        zh: "AI时代个人自学平台，打通知识学习、复盘、整理的各种场景，颜值和实力兼具的学习系统，打造极致专注空间。",
+        en: "An AI-powered personal study platform that connects knowledge learning, review, and organization in various scenarios. Combining the beauty of design with the power of technology, it creates the ultimate focused study space."
       },
       url: "#", 
       tags: ["Productivity", "Flow State", "App"],
-      icon: BookOpen,
+      icon: GraduationCap,
       image: "linear-gradient(135deg, #23074d 0%, #cc5333 100%)",
       accent: "from-orange-500 to-red-500",
       status: "Concept",
     },
     {
-      id: 'portfolio',
-      title: "Portfolio v1",
+      id: 'cogniread',
+      title: "CogniRead",
       description: {
-        zh: "你现在看到的这个网站。基于 React + Framer Motion 打造的流体极简主义实验。",
-        en: "The site you are viewing. A fluid minimalism experiment built with React + Framer Motion."
+        zh: "一个轻量化的简单的英文阅读软件，打造沉浸式可持续广泛兼容的阅读体验",
+        en: "A lightweight and simple English reading software that creates an immersive, sustainable, and widely compatible reading experience."
       },
-      url: "#",
-      tags: ["Design", "Animation", "React"],
-      icon: Layout,
-      image: "linear-gradient(135deg, #000000 0%, #434343 100%)",
-      accent: "from-gray-200 to-gray-500",
+      url: "https://github.com/vimalinx/CogniRead", 
+      tags: ["Productivity", "Flow State", "App"],
+      icon: BookOpen,
+      image: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)", // Placeholder for actual image
+      accent: "from-purple-500 to-indigo-500",
       status: "Live",
-    },
+    }
   ],
     socials: [
       {
@@ -84,14 +84,15 @@ export const config = {
         color: 'hover:text-green-500',
         details: {
           zh: [
+            "”照我思索，能认识人”",
             "这是我的核心思维阵地。",
-            "每周分享全栈技术心得、架构设计思考以及对未来科技趋势的深度解析。",
-            "不定期掉落独家资源与学习路线图。"
+            "分享个人成长经历，阅读、思考、写作。",
+            "认知源于对内在世界的观察和体验"
           ],
           en: [
             "My core thinking hub.",
-            "Sharing full-stack insights, architectural designs, and deep dives into future tech trends.",
-            "Exclusive resources and learning roadmaps dropped occasionally."
+            "Sharing personal growth experiences, reading, thinking, writing.",
+            "Cognition emerges from the observation and experience of the inner world."
           ]
         }
       },
@@ -100,17 +101,17 @@ export const config = {
         name: { zh: '小红书', en: 'RedNote' },
         icon: Smartphone, 
         type: 'qrcode',
-        qrCode: '/qr-xhs.jpg',
+        qrCode: '/qr-xhs.png',
         color: 'hover:text-red-500',
         details: {
           zh: [
             "探索数字游民的生活美学。",
-            "在这里展示我的桌面配置、生产力工具推荐以及设计灵感来源。",
+            "在这里展示我的小东西的开发进度和学习经验分享、生产力工具推荐以及设计灵感来源。",
             "用视觉语言记录代码之外的精彩瞬间。"
           ],
           en: [
             "Exploring the aesthetics of digital nomad life.",
-            "Showcasing desk setups, productivity tools, and design inspirations.",
+            "Showcasing the development progress and learning experiences of my small projects, productivity tools, and design inspirations.",
             "Visualizing the beautiful moments beyond the code."
           ]
         }

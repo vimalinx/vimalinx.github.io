@@ -7,7 +7,7 @@
 ---
 
 ## 1. 基础信息修改 (名字、简介)
-
+ 
 在 `src/config.ts` 中找到 `profile` 部分：
 
 ```typescript
