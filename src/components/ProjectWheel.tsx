@@ -303,7 +303,7 @@ export const ProjectWheel = ({ lang }: ProjectWheelProps) => {
         </div>
 
         {/* Gradient Mask: Left-to-Right Fade for Text Readability */}
-        <div className="absolute inset-y-0 left-0 w-[80%] z-10 pointer-events-none bg-gradient-to-r from-black via-black/60 to-transparent md:bg-gradient-to-r" />
+        <div className="absolute inset-y-0 left-0 w-[80%] z-10 pointer-events-none bg-gradient-to-r from-black/80 via-black/30 to-transparent md:bg-gradient-to-r" />
 
         {/* Content Overlay */}
         <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 md:justify-center md:p-16 lg:p-24 pointer-events-none">

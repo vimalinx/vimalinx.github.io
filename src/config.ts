@@ -1,4 +1,4 @@
-import { Github, Smartphone, BookOpen, GraduationCap, Gift, Database } from 'lucide-react';
+import { Github, Smartphone, BookOpen, GraduationCap, Gift, Database, MessageCircle } from 'lucide-react';
 
 export type Language = 'zh' | 'en';
 
@@ -17,6 +17,25 @@ export const config = {
     avatar: "/avatar-placeholder.png", 
   },
   projects: [
+    {
+      id: 'vimagram',
+      title: "Vimagram",
+      description: {
+        zh: "一个给 ClawdBot 用的纯国内聊天软件，连接你的 AI 助手。\n带有服务器插件，支持私有服务器部署。",
+        en: "A pure domestic chat software for ClawdBot, connecting you with your AI assistant.\nIncludes server plugins and supports private server deployment."
+      },
+      url: "https://github.com/vimalinx/vimalinx-suite-core",
+      tags: ["Chat", "AI Bot", "IM"],
+      icon: MessageCircle,
+      image: "linear-gradient(135deg, #00c6ff 0%, #0072ff 100%)",
+      gallery: [
+        "/vimagram-1.jpg",
+        "/vimagram-2.jpg",
+        "/vimagram-3.jpg"
+      ],
+      accent: "from-blue-400 to-cyan-400",
+      status: "Live",
+    },
     {
       id: 'cybergift',
       title: "CyberGift",
@@ -52,7 +71,8 @@ export const config = {
         "/flowstudy-1.png",
         "/flowstudy-2.png",
         "/flowstudy-3.png",
-        "/flowstudy-4.png"
+        "/flowstudy-4.png",
+        "/flowstudy-5.png"
       ],
       accent: "from-orange-500 to-red-500",
       status: "Concept",
@@ -160,4 +180,3 @@ export const config = {
       },
     ],
   };
-  
