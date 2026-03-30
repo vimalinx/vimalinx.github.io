@@ -52,7 +52,12 @@ export const Background = () => {
       />
 
       {/* Noise Texture Overlay for "Film Grain" feel */}
-      <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] brightness-100 contrast-150 pointer-events-none"></div>
+      <svg className="absolute inset-0 h-full w-full opacity-[0.03] pointer-events-none">
+        <filter id="noise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#noise)" />
+      </svg>
     </div>
   );
 };
