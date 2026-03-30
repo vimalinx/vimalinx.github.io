@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsx scripts/generate-feed.ts && tsc -b && vite build",
+    "build": "tsx scripts/generate-feed.ts && tsc -b && vite build && cp dist/index.html dist/404.html",
     "lint": "eslint .",
     "preview": "vite preview",
     "blog": "tsx scripts/cli.ts"
