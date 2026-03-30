@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Languages, ArrowLeft } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Languages, ArrowLeft, Moon, Sun } from 'lucide-react';
 import { Background } from './Background';
 
 interface BlogLayoutProps {
@@ -9,6 +10,25 @@ interface BlogLayoutProps {
 }
 
 export function BlogLayout({ lang, toggleLang, children }: BlogLayoutProps) {
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('theme') as 'dark' | 'light' | null;
+    if (saved) {
+      setTheme(saved);
+      document.documentElement.classList.toggle('light', saved === 'light');
+    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      setTheme('light');
+      document.documentElement.classList.add('light');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    localStorage.setItem('theme', next);
+    document.documentElement.classList.toggle('light', next === 'light');
+  };
   return (
     <div className="relative min-h-screen w-full bg-black text-white selection:bg-purple-500/30">
       {/* Background */}
@@ -36,6 +56,17 @@ export function BlogLayout({ lang, toggleLang, children }: BlogLayoutProps) {
           </Link>
         </div>
         <div className="flex items-center gap-3">
+          <button
+            onClick={toggleTheme}
+            className="group flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-2 text-sm backdrop-blur-md transition-all hover:bg-white/10"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? (
+              <Moon className="h-4 w-4 text-gray-400 group-hover:text-white" />
+            ) : (
+              <Sun className="h-4 w-4 text-amber-400 group-hover:text-amber-300" />
+            )}
+          </button>
           <Link
             to="/"
             className="flex items-center gap-1 rounded-full border border-white/10 bg-black/20 px-3 py-2 text-sm backdrop-blur-md transition-all hover:bg-white/10 text-gray-300 hover:text-white"

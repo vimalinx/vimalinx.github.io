@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Markdown from 'react-markdown';
@@ -8,13 +8,68 @@ import { ReadingProgress } from '../components/ReadingProgress';
 import { TableOfContents } from '../components/TableOfContents';
 import { PostNav } from '../components/PostNav';
 import { getPost, getAvailableLangs, getTableOfContents, getAdjacentPosts } from '../utils/blog';
+import hljs from 'highlight.js/lib/core';
+import javascript from 'highlight.js/lib/languages/javascript';
+import typescript from 'highlight.js/lib/languages/typescript';
+import python from 'highlight.js/lib/languages/python';
+import bash from 'highlight.js/lib/languages/bash';
+import json from 'highlight.js/lib/languages/json';
+import yaml from 'highlight.js/lib/languages/yaml';
+import css from 'highlight.js/lib/languages/css';
+import xml from 'highlight.js/lib/languages/xml';
+import markdown from 'highlight.js/lib/languages/markdown';
+import 'highlight.js/styles/github-dark.min.css';
 import type { Language } from '../config';
+
+// Register languages
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('typescript', typescript);
+hljs.registerLanguage('python', python);
+hljs.registerLanguage('bash', bash);
+hljs.registerLanguage('json', json);
+hljs.registerLanguage('yaml', yaml);
+hljs.registerLanguage('css', css);
+hljs.registerLanguage('xml', xml);
+hljs.registerLanguage('markdown', markdown);
+
+// CodeBlock component
+function CodeBlock({ children, className, ...props }: any) {
+  const [copied, setCopied] = useState(false);
+  const codeRef = useRef<HTMLElement>(null);
+  const _language = className?.replace('language-', '') || '';
+  void _language;
+
+  useEffect(() => {
+    if (codeRef.current) {
+      hljs.highlightElement(codeRef.current);
+    }
+  }, [children]);
+
+  const handleCopy = () => {
+    const text = codeRef.current?.textContent || '';
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="code-block-wrapper">
+      <button onClick={handleCopy} className={`copy-btn ${copied ? 'copied' : ''}`}>
+        {copied ? '✓ 已复制' : '复制'}
+      </button>
+      <pre className={className} {...props}>
+        <code ref={codeRef} className={className}>{children}</code>
+      </pre>
+    </div>
+  );
+}
 
 export function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [lang, setLang] = useState<Language>('zh');
   const [showBackTop, setShowBackTop] = useState(false);
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
 
   const post = slug ? getPost(slug, lang) : undefined;
   const availableLangs = slug ? getAvailableLangs(slug) : [];
@@ -135,6 +190,23 @@ export function BlogPost() {
                   const id = text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-|-$/g, '');
                   return <h3 id={id} {...props}>{children}</h3>;
                 },
+                pre: ({ children, ...props }) => {
+                  // Extract code element from children
+                  const codeChild = Array.isArray(children) ? children[0] : children;
+                  if (codeChild?.props?.className?.startsWith('language-')) {
+                    return <CodeBlock {...codeChild.props} />;
+                  }
+                  return <pre {...props}>{children}</pre>;
+                },
+                img: ({ src, alt, ...props }) => (
+                  <img
+                    src={src}
+                    alt={alt}
+                    className="mb-6 rounded-xl border border-white/10 cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setLightboxSrc(src || null)}
+                    {...props}
+                  />
+                ),
               }}
             >
               {displayPost.content}
@@ -157,6 +229,13 @@ export function BlogPost() {
       >
         <ArrowUp className="h-4 w-4" />
       </button>
+
+      {/* Image Lightbox */}
+      {lightboxSrc && (
+        <div className="lightbox-overlay" onClick={() => setLightboxSrc(null)}>
+          <img src={lightboxSrc} alt="" />
+        </div>
+      )}
     </>
   );
 }

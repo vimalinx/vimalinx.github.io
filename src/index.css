@@ -193,3 +193,112 @@ html {
 .tag-pill:not(.active) {
   @apply border-white/10 bg-white/5 text-gray-400 hover:border-white/20 hover:text-gray-300;
 }
+
+/* Code block with copy button */
+.code-block-wrapper {
+  @apply relative;
+}
+
+.code-block-wrapper .copy-btn {
+  @apply absolute top-2 right-2 flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-400 transition-all hover:bg-white/10 hover:text-white;
+}
+
+.code-block-wrapper .copy-btn.copied {
+  @apply text-green-400 border-green-500/30;
+}
+
+/* Image lightbox */
+.lightbox-overlay {
+  @apply fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.lightbox-overlay img {
+  @apply max-h-[90vh] max-w-[90vw] rounded-lg object-contain;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Light mode overrides */
+.light body, html.light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border-color: rgba(0, 0, 0, 0.08);
+  --card-bg: rgba(0, 0, 0, 0.02);
+}
+
+html.light body {
+  @apply bg-white text-slate-900;
+}
+
+html.light .blog-prose {
+  @apply text-slate-700;
+}
+
+html.light .blog-prose h1,
+html.light .blog-prose h2,
+html.light .blog-prose h3 {
+  @apply text-slate-900;
+}
+
+html.light .blog-prose strong {
+  @apply text-slate-900;
+}
+
+html.light .blog-prose a {
+  @apply text-purple-600 hover:text-purple-500;
+}
+
+html.light .blog-prose code {
+  @apply bg-slate-100 text-purple-700;
+}
+
+html.light .blog-prose pre {
+  @apply bg-slate-50 border-slate-200;
+}
+
+html.light .blog-prose pre code {
+  @apply text-slate-700;
+}
+
+html.light .blog-prose blockquote {
+  @apply bg-purple-50 border-purple-400;
+}
+
+html.light .blog-prose blockquote p {
+  @apply text-slate-600;
+}
+
+html.light .blog-prose th {
+  @apply text-slate-900 bg-slate-50;
+}
+
+html.light .blog-prose td {
+  @apply text-slate-600 border-slate-100;
+}
+
+html.light .blog-prose tbody tr:hover {
+  @apply bg-slate-50;
+}
+
+html.light .tag-pill:not(.active) {
+  @apply border-slate-200 bg-slate-50 text-slate-500 hover:border-slate-300 hover:text-slate-700;
+}
+
+html.light .reading-progress {
+  background: linear-gradient(90deg, #7c3aed, #4f46e5);
+}
+
+html.light .back-to-top {
+  @apply border-slate-200 bg-white/80 text-slate-400 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700;
+}
+
+html.light .code-block-wrapper .copy-btn {
+  @apply border-slate-200 bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-700;
+}
