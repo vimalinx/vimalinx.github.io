@@ -12,3 +12,10 @@ export interface BlogPost {
   frontmatter: BlogPostFrontmatter;
   content: string;
 }
+
+/** TOC heading entry */
+export interface TocHeading {
+  id: string;
+  text: string;
+  level: number;
+}

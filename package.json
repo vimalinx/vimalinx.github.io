@@ -11,6 +11,7 @@
     "blog": "tsx scripts/cli.ts"
   },
   "dependencies": {
+    "buffer": "^6.0.3",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.26",
     "gray-matter": "^4.0.3",
