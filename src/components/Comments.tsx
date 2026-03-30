@@ -17,7 +17,7 @@ export function Comments({ slug, lang }: CommentsProps) {
     script.setAttribute('data-repo', 'vimalinx/vimalinx.github.io');
     script.setAttribute('data-repo-id', 'R_kgDOQqfqjw');
     script.setAttribute('data-category', 'General');
-    script.setAttribute('data-category-id', 'DIC_kwDOQqfqj84CjZgE');
+    script.setAttribute('data-category-id', 'DIC_kwDOQqfqj84C5oGn');
     script.setAttribute('data-mapping', 'pathname');
     script.setAttribute('data-strict', '0');
     script.setAttribute('data-reactions-enabled', '1');
