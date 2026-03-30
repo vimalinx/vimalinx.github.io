@@ -93,7 +93,16 @@ export function BlogLayout({ lang, toggleLang, children }: BlogLayoutProps) {
 
       {/* Footer */}
       <footer className="relative z-10 border-t border-white/10 px-6 py-6 md:px-12 text-xs text-gray-600">
-        <p>&copy; {new Date().getFullYear()} Vimalinx</p>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <p>&copy; {new Date().getFullYear()} Vimalinx</p>
+          <div className="flex gap-4">
+            <Link to="/blog/archive" className="hover:text-gray-400 transition-colors">
+              {lang === 'zh' ? '归档' : 'Archive'}
+            </Link>
+            <a href="/feed.xml" target="_blank" className="hover:text-gray-400 transition-colors">RSS</a>
+            <a href="/sitemap.xml" target="_blank" className="hover:text-gray-400 transition-colors">Sitemap</a>
+          </div>
+        </div>
       </footer>
     </div>
   );
