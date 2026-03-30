@@ -1,24 +1,24 @@
 ---
-title: "Weekly #13 — bio_studio、resomate、openclaw-companion-app 等 5 个项目"
+title: "Weekly #13 — bio_studio, resomate, openclaw-companion-app, and more"
 date: "2026-03-30"
 tags: ["weekly", "dev-log"]
-excerpt: "本周在 5 个项目中共提交 32 次"
-readTime: 3
+excerpt: "32 commits across 5 projects this week"
+readTime: 4
 category: weekly
 series:
   name: dev-weekly
   order: 13
 ---
 
-## 概览
+## Overview
 
-03/23 – 03/29，在 **5** 个项目中共提交 **32** 次。
+03/23 – 03/29, **5** projects with **32** commits total.
 
-## 按项目
+## By Project
 
 ### bio_studio (16 commits)
 
-**新功能**
+**New Features**
 
 - add bioinformatics skill catalog and service API infrastructure
 - wire design gold path through cli and mcp
@@ -30,14 +30,14 @@ series:
 - add bio design and lab mcp services
 - add workspace project runtime and validation flow
 
-**文档**
+**Documentation**
 
 - add Chinese design page and phase 1 plan
 - add local AI bio workspace gold path design
 - publish workspace architecture and guide
 - refresh workspace README
 
-**测试**
+**Testing**
 
 - make safe ci pass on clean checkout
 
@@ -45,13 +45,13 @@ series:
 
 - add safe read-only GitHub Actions workflow
 
-**杂项**
+**Misc**
 
 - ignore dirty external engine submodules
 
 ### resomate (8 commits)
 
-**新功能**
+**New Features**
 
 - feat(android): add native home feed and detail ui
 - feat(android): add home feed viewmodel
@@ -59,56 +59,55 @@ series:
 - feat(android): add home api contracts and mappers
 - feat(android): split native launcher and web shell
 
-**构建**
+**Build**
 
 - build(android): enable kotlin and compose foundation
 
-**杂项**
+**Misc**
 
 - ignore local worktrees directory
 
-**其他**
+**Other**
 
 - Fix publish editor scroll jump
 
 ### openclaw-companion-app (6 commits)
 
-**新功能**
+**New Features**
 
-- Phase 3 - PWA 配置完成
-- Phase 2 - 核心组件骨架实现
-- Phase 1 - 项目基础设施搭建
+- Phase 3 - PWA configuration complete
+- Phase 2 - Core component skeleton implementation
+- Phase 1 - Project infrastructure setup
 
-**文档**
+**Documentation**
 
-- 添加 MVP 骨架实现总结
+- Add MVP skeleton implementation summary
 
-**其他**
+**Other**
 
 - Add product definition v1
 - Initial commit: Vite + React + TypeScript scaffold
 
 ### vimalinx.github.io (1 commits)
 
-**新功能**
+**New Features**
 
 - add blog system with CLI and Claude Code skills
 
 ### website-for-everyone (1 commits)
 
-**其他**
+**Other**
 
 - Initial commit: Vite + React + TypeScript scaffold
 
-## 按类型统计
+## By Type
 
-| 类型 | 数量 |
+| Type | Count |
 |------|------|
-| 新功能 | 18 |
-| 文档 | 5 |
-| 测试 | 1 |
+| New Features | 18 |
+| Documentation | 5 |
+| Testing | 1 |
 | CI/CD | 1 |
-| 构建 | 1 |
-| 杂项 | 2 |
-| 其他 | 4 |
-
+| Build | 1 |
+| Misc | 2 |
+| Other | 4 |

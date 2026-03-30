@@ -28,6 +28,12 @@ export function BlogLayout({ lang, toggleLang, children }: BlogLayoutProps) {
           >
             {lang === 'zh' ? '博客' : 'Blog'}
           </Link>
+          <Link
+            to="/blog/archive"
+            className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-white mix-blend-difference"
+          >
+            {lang === 'zh' ? '归档' : 'Archive'}
+          </Link>
         </div>
         <div className="flex items-center gap-3">
           <Link

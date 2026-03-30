@@ -4,6 +4,7 @@ date: 2026-03-29
 tags: [thoughts, beginning]
 excerpt: The first post — why I wanted to start a blog, and how this site came to be.
 readTime: 2
+category: essay
 ---
 
 ## Why a Blog

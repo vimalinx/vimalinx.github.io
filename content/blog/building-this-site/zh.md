@@ -4,6 +4,7 @@ date: 2026-03-28
 tags: [技术, React, Vite]
 excerpt: 记录一下这个博客系统的技术架构——为什么选 Markdown 文件管理、怎么处理路由、以及一些踩坑经验。
 readTime: 5
+category: tech
 ---
 
 ## 技术栈

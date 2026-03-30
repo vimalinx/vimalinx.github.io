@@ -1,6 +1,12 @@
 import { Buffer } from 'buffer';
 import matter from 'gray-matter';
-import type { BlogPost, BlogPostFrontmatter, TocHeading } from '../types/blog';
+import type { BlogPost, BlogPostFrontmatter, TocHeading, Category } from '../types/blog';
+
+export interface ArchiveMonth {
+  year: number;
+  month: number;
+  posts: BlogPost[];
+}
 
 // Ensure Buffer is available for gray-matter in browser
 if (typeof (globalThis as any).Buffer === 'undefined') {
@@ -76,6 +82,18 @@ export function getAllTags(lang?: 'zh' | 'en'): string[] {
   return [...tags].sort();
 }
 
+/** Get all unique categories across all posts */
+export function getAllCategories(lang?: 'zh' | 'en'): Category[] {
+  const posts = lang ? allPosts.filter(p => p.lang === lang) : allPosts;
+  const categories = new Set<Category>();
+  for (const p of posts) {
+    if (p.frontmatter.category) {
+      categories.add(p.frontmatter.category);
+    }
+  }
+  return [...categories].sort();
+}
+
 /** Get adjacent posts (previous and next) by date */
 export function getAdjacentPosts(slug: string, lang: 'zh' | 'en'): { prev?: BlogPost; next?: BlogPost } {
   const posts = allPosts.filter(p => p.lang === lang);
@@ -105,4 +123,42 @@ export function getTableOfContents(content: string): TocHeading[] {
     }
   }
   return headings;
+}
+
+export function getArchiveMonths(lang: 'zh' | 'en'): ArchiveMonth[] {
+  const posts = allPosts.filter(p => p.lang === lang);
+
+  // Group posts by year and month
+  const monthGroups: { [key: string]: BlogPost[] } = {};
+
+  for (const post of posts) {
+    const date = new Date(post.frontmatter.date);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // 1-based
+
+    const key = `${year}-${month}`;
+    if (!monthGroups[key]) {
+      monthGroups[key] = [];
+    }
+    monthGroups[key].push(post);
+  }
+
+  // Convert to array and sort by date descending
+  const archives: ArchiveMonth[] = Object.entries(monthGroups).map(([key, posts]) => {
+    const [year, month] = key.split('-').map(Number);
+    return {
+      year,
+      month,
+      posts: posts.sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
+    };
+  });
+
+  // Sort by date descending
+  archives.sort((a, b) => {
+    const dateA = new Date(a.year, a.month - 1);
+    const dateB = new Date(b.year, b.month - 1);
+    return dateB.getTime() - dateA.getTime();
+  });
+
+  return archives;
 }

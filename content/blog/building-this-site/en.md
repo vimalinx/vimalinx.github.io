@@ -4,6 +4,7 @@ date: 2026-03-28
 tags: [tech, React, Vite]
 excerpt: A record of the technical architecture behind this blog — why Markdown files, how routing works, and lessons learned along the way.
 readTime: 4
+category: tech
 ---
 
 ## The Stack

@@ -4,6 +4,7 @@ date: 2026-03-29
 tags: [随笔, 起点]
 excerpt: 第一篇文章，关于为什么我想写博客，以及这个网站是怎么来的。
 readTime: 3
+category: essay
 ---
 
 ## 为什么写博客
