@@ -325,3 +325,76 @@ html.light .code-block-header {
 html.light .code-block-lang {
   @apply text-slate-400;
 }
+
+/* Print styles */
+@media print {
+  body {
+    @apply bg-white text-black;
+  }
+
+  /* Hide non-essential elements */
+  header,
+  footer,
+  .reading-progress,
+  .back-to-top,
+  .lightbox-overlay,
+  .code-block-wrapper .copy-btn,
+  .code-block-header,
+  nav,
+  aside,
+  button {
+    display: none !important;
+  }
+
+  /* Clean up blog content */
+  .blog-prose {
+    @apply text-black;
+    max-width: 100%;
+  }
+
+  .blog-prose h1,
+  .blog-prose h2,
+  .blog-prose h3 {
+    @apply text-black;
+    page-break-after: avoid;
+  }
+
+  .blog-prose pre {
+    @apply border-gray-300 bg-gray-50;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  .blog-prose code {
+    @apply bg-gray-100 text-black;
+  }
+
+  .blog-prose a {
+    @apply text-black underline;
+  }
+
+  .blog-prose a::after {
+    content: " (" attr(href) ")";
+    @apply text-gray-500 text-xs;
+  }
+
+  .blog-prose blockquote {
+    @apply border-gray-400 bg-transparent;
+  }
+
+  .blog-prose img {
+    max-width: 100%;
+    page-break-inside: avoid;
+  }
+
+  /* Remove background effects */
+  .fixed {
+    display: none !important;
+  }
+
+  /* Remove shadows and borders */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}

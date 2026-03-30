@@ -8,8 +8,10 @@ import { BlogLayout } from '../components/BlogLayout';
 import { ReadingProgress } from '../components/ReadingProgress';
 import { TableOfContents } from '../components/TableOfContents';
 import { PostNav } from '../components/PostNav';
+import { ShareButtons } from '../components/ShareButtons';
 import { Comments } from '../components/Comments';
 import { RelatedPosts } from '../components/RelatedPosts';
+import { HeadingAnchor } from '../components/HeadingAnchor';
 import { getPost, getAvailableLangs, getTableOfContents, getAdjacentPosts, getRelatedPosts } from '../utils/blog';
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -233,15 +235,15 @@ export function BlogPost() {
           <div className="blog-prose">
             <Markdown
               components={{
-                h2: ({ children, ...props }) => {
+                h2: ({ children }) => {
                   const text = String(children);
                   const id = text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-|-$/g, '');
-                  return <h2 id={id} {...props}>{children}</h2>;
+                  return <HeadingAnchor id={id} as="h2">{children}</HeadingAnchor>;
                 },
-                h3: ({ children, ...props }) => {
+                h3: ({ children }) => {
                   const text = String(children);
                   const id = text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-|-$/g, '');
-                  return <h3 id={id} {...props}>{children}</h3>;
+                  return <HeadingAnchor id={id} as="h3">{children}</HeadingAnchor>;
                 },
                 pre: ({ children, ...props }) => {
                   // Extract code element from children
@@ -265,6 +267,9 @@ export function BlogPost() {
               {displayPost.content}
             </Markdown>
           </div>
+
+          {/* Share Buttons */}
+          <ShareButtons title={fm.title} slug={slug || ''} lang={displayLang} />
 
           {/* Post Navigation */}
           <PostNav prev={adjacent.prev} next={adjacent.next} lang={displayLang} />

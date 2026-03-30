@@ -106,6 +106,7 @@ export function BlogList() {
             <button
               onClick={() => setActiveCategory(null)}
               className={`tag-pill ${activeCategory === null ? 'active' : ''}`}
+              aria-label={lang === 'zh' ? '显示全部文章' : 'Show all posts'}
             >
               {lang === 'zh' ? '全部' : 'All'}
             </button>

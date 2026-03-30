@@ -49,7 +49,7 @@ export function SearchBox({ lang, onSelect }: SearchBoxProps) {
   }
 
   return (
-    <div className="relative">
+    <div className="relative" role="search">
       <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5">
         <Search className="h-3.5 w-3.5 text-gray-400" />
         <input
@@ -57,6 +57,7 @@ export function SearchBox({ lang, onSelect }: SearchBoxProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={lang === 'zh' ? '搜索文章...' : 'Search posts...'}
+          aria-label={lang === 'zh' ? '搜索文章' : 'Search posts'}
           className="bg-transparent text-sm text-white outline-none placeholder-gray-500 w-40 sm:w-56"
         />
         <button onClick={() => { setQuery(''); setOpen(false); }}>
