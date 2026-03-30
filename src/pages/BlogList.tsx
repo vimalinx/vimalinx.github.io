@@ -8,6 +8,8 @@ import { SearchBox } from '../components/SearchBox';
 import { getAllPosts, getAllTags } from '../utils/blog';
 import { CATEGORY_META, ALL_CATEGORIES, type Category } from '../types/blog';
 import type { Language } from '../config';
+import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
+import { useSearchFocus } from '../hooks/useSearchFocus';
 
 export function BlogList() {
   const [lang, setLang] = useState<Language>('zh');
@@ -23,6 +25,12 @@ export function BlogList() {
   }, [allPostsForLang, activeCategory]);
 
   const toggleLang = () => setLang(prev => prev === 'zh' ? 'en' : 'zh');
+
+  const focusSearch = useSearchFocus();
+
+  useKeyboardShortcuts({
+    '/': focusSearch,
+  });
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
@@ -80,6 +88,15 @@ export function BlogList() {
               <Bookmark className="h-3 w-3" />
               {tags.length} {lang === 'zh' ? '标签' : 'tags'}
             </span>
+            <span className="flex items-center gap-1.5 text-xs text-gray-600">
+              <Calendar className="h-3 w-3" />
+              {lang === 'zh' ? '约' : '~'}{Math.round(allPostsForLang.reduce((sum, p) => sum + (p.frontmatter.readTime || 0), 0) / 60)}{lang === 'zh' ? '小时阅读' : 'h reading'}
+            </span>
+            {categories.length > 0 && (
+              <span className="flex items-center gap-1.5 text-xs text-gray-600">
+                {categories.length} {lang === 'zh' ? '个分类' : 'categories'}
+              </span>
+            )}
           </div>
         </div>
 

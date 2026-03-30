@@ -207,6 +207,21 @@ html {
   @apply text-green-400 border-green-500/30;
 }
 
+/* Code block header */
+.code-block-header {
+  @apply flex items-center justify-between rounded-t-xl border-b border-white/10 bg-white/[0.03] px-4 py-2;
+}
+
+.code-block-lang {
+  @apply text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+/* Adjust pre when header exists above */
+.code-block-header + pre,
+.code-block-header ~ pre {
+  @apply rounded-t-none;
+}
+
 /* Image lightbox */
 .lightbox-overlay {
   @apply fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm;
@@ -301,4 +316,12 @@ html.light .back-to-top {
 
 html.light .code-block-wrapper .copy-btn {
   @apply border-slate-200 bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-700;
+}
+
+html.light .code-block-header {
+  @apply bg-slate-50 border-slate-200;
+}
+
+html.light .code-block-lang {
+  @apply text-slate-400;
 }

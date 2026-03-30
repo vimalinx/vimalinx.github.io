@@ -165,3 +165,48 @@ export function getArchiveMonths(lang: 'zh' | 'en'): ArchiveMonth[] {
 
   return archives;
 }
+
+/** Get all posts belonging to a specific series, sorted by series.order */
+export function getSeriesPosts(seriesName: string, lang: 'zh' | 'en'): BlogPost[] {
+  return allPosts
+    .filter(p => p.lang === lang && p.frontmatter.series?.name === seriesName)
+    .sort((a, b) => (a.frontmatter.series?.order ?? 0) - (b.frontmatter.series?.order ?? 0));
+}
+
+/** Get all unique series with post counts */
+export function getAllSeries(lang: 'zh' | 'en'): { name: string; count: number }[] {
+  const seriesMap = new Map<string, number>();
+  for (const p of allPosts) {
+    if (p.lang === lang && p.frontmatter.series) {
+      const name = p.frontmatter.series.name;
+      seriesMap.set(name, (seriesMap.get(name) || 0) + 1);
+    }
+  }
+  return [...seriesMap.entries()]
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+/** Get related posts based on shared tags and category */
+export function getRelatedPosts(slug: string, lang: 'zh' | 'en', limit: number = 3): BlogPost[] {
+  const current = allPosts.find(p => p.slug === slug && p.lang === lang);
+  if (!current) return [];
+
+  const scored = allPosts
+    .filter(p => p.slug !== slug && p.lang === lang)
+    .map(p => {
+      let score = 0;
+      // Shared tags
+      for (const t of p.frontmatter.tags) {
+        if (current.frontmatter.tags.includes(t)) score += 2;
+      }
+      // Same category
+      if (p.frontmatter.category && p.frontmatter.category === current.frontmatter.category) score += 3;
+      return { post: p, score };
+    })
+    .filter(s => s.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit);
+
+  return scored.map(s => s.post);
+}

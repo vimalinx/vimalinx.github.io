@@ -4,6 +4,7 @@ import { BlogList } from './pages/BlogList';
 import { BlogPost } from './pages/BlogPost';
 import { ArchivePage } from './pages/ArchivePage';
 import { TagPage } from './pages/TagPage';
+import { SeriesPage } from './pages/SeriesPage';
 import { NotFound } from './pages/NotFound';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/blog/archive" element={<ArchivePage />} />
         <Route path="/blog/tag/:tag" element={<TagPage />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/blog/series/:name" element={<SeriesPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

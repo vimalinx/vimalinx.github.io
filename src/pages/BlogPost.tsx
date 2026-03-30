@@ -9,7 +9,8 @@ import { ReadingProgress } from '../components/ReadingProgress';
 import { TableOfContents } from '../components/TableOfContents';
 import { PostNav } from '../components/PostNav';
 import { Comments } from '../components/Comments';
-import { getPost, getAvailableLangs, getTableOfContents, getAdjacentPosts } from '../utils/blog';
+import { RelatedPosts } from '../components/RelatedPosts';
+import { getPost, getAvailableLangs, getTableOfContents, getAdjacentPosts, getRelatedPosts } from '../utils/blog';
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
 import typescript from 'highlight.js/lib/languages/typescript';
@@ -22,6 +23,7 @@ import xml from 'highlight.js/lib/languages/xml';
 import markdown from 'highlight.js/lib/languages/markdown';
 import 'highlight.js/styles/github-dark.min.css';
 import type { Language } from '../config';
+import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 
 // Register languages
 hljs.registerLanguage('javascript', javascript);
@@ -38,8 +40,7 @@ hljs.registerLanguage('markdown', markdown);
 function CodeBlock({ children, className, ...props }: any) {
   const [copied, setCopied] = useState(false);
   const codeRef = useRef<HTMLElement>(null);
-  const _language = className?.replace('language-', '') || '';
-  void _language;
+  const language = className?.replace('language-', '') || '';
 
   useEffect(() => {
     if (codeRef.current) {
@@ -54,8 +55,16 @@ function CodeBlock({ children, className, ...props }: any) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const langMap: Record<string, string> = { js: 'JavaScript', ts: 'TypeScript', tsx: 'TypeScript', jsx: 'JSX', py: 'Python', sh: 'Shell', bash: 'Bash', json: 'JSON', yaml: 'YAML', yml: 'YAML', css: 'CSS', html: 'HTML', xml: 'XML', md: 'Markdown', sql: 'SQL', rust: 'Rust', go: 'Go', java: 'Java', cpp: 'C++', c: 'C', rb: 'Ruby', php: 'PHP', dart: 'Dart', swift: 'Swift', kotlin: 'Kotlin' };
+  const displayLang = language ? (langMap[language] || language) : '';
+
   return (
     <div className="code-block-wrapper">
+      {displayLang && (
+        <div className="code-block-header">
+          <span className="code-block-lang">{displayLang}</span>
+        </div>
+      )}
       <button onClick={handleCopy} className={`copy-btn ${copied ? 'copied' : ''}`}>
         {copied ? '✓ 已复制' : '复制'}
       </button>
@@ -80,6 +89,7 @@ export function BlogPost() {
 
   const toc = displayPost ? getTableOfContents(displayPost.content) : [];
   const adjacent = slug ? getAdjacentPosts(slug, displayLang) : {};
+  const related = slug ? getRelatedPosts(slug, displayLang) : [];
 
   const toggleLang = () => {
     const otherLang: Language = displayLang === 'zh' ? 'en' : 'zh';
@@ -89,6 +99,12 @@ export function BlogPost() {
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
+
+  useKeyboardShortcuts({
+    'Escape': () => {
+      if (lightboxSrc) setLightboxSrc(null);
+    },
+  });
 
   useEffect(() => {
     const handleScroll = () => setShowBackTop(window.scrollY > 400);
@@ -125,6 +141,28 @@ export function BlogPost() {
         {fm.tags.map(tag => (
           <meta key={tag} property="article:tag" content={tag} />
         ))}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BlogPosting',
+            headline: fm.title,
+            description: fm.excerpt,
+            datePublished: fm.date,
+            author: {
+              '@type': 'Person',
+              name: 'Vimalinx',
+              url: 'https://vimalinx.xyz',
+            },
+            url: `${siteUrl}/blog/${slug}`,
+            keywords: fm.tags.join(', '),
+            ...(fm.tags.length > 0 && {
+              mainEntityOfPage: {
+                '@type': 'WebPage',
+                '@id': `${siteUrl}/blog/${slug}`,
+              },
+            }),
+          })}
+        </script>
       </Helmet>
       <ReadingProgress />
       <BlogLayout lang={displayLang} toggleLang={toggleLang}>
@@ -230,6 +268,7 @@ export function BlogPost() {
 
           {/* Post Navigation */}
           <PostNav prev={adjacent.prev} next={adjacent.next} lang={displayLang} />
+          <RelatedPosts posts={related} lang={displayLang} />
         </motion.article>
 
         <Comments slug={slug || ''} lang={displayLang} />
