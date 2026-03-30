@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://vimalinx.xyz/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://vimalinx.xyz/blog</loc><changefreq>daily</changefreq></url>
+  <url><loc>https://vimalinx.xyz/blog/archive</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://vimalinx.xyz/blog/weekly-2026-W13</loc><lastmod>2026-03-30</lastmod></url>
+  <url><loc>https://vimalinx.xyz/blog/hello-world</loc><lastmod>2026-03-29</lastmod></url>
+  <url><loc>https://vimalinx.xyz/blog/building-this-site</loc><lastmod>2026-03-28</lastmod></url>
+</urlset>

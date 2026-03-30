@@ -3,10 +3,12 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Markdown from 'react-markdown';
 import { Calendar, Clock, Tag, ArrowLeft, Languages, ArrowUp } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import { BlogLayout } from '../components/BlogLayout';
 import { ReadingProgress } from '../components/ReadingProgress';
 import { TableOfContents } from '../components/TableOfContents';
 import { PostNav } from '../components/PostNav';
+import { Comments } from '../components/Comments';
 import { getPost, getAvailableLangs, getTableOfContents, getAdjacentPosts } from '../utils/blog';
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -108,9 +110,22 @@ export function BlogPost() {
   }
 
   const fm = displayPost.frontmatter;
+  const siteUrl = 'https://vimalinx.xyz';
 
   return (
     <>
+      <Helmet>
+        <title>{fm.title} — Vimalinx</title>
+        <meta name="description" content={fm.excerpt} />
+        <meta property="og:title" content={fm.title} />
+        <meta property="og:description" content={fm.excerpt} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={`${siteUrl}/blog/${slug}`} />
+        <meta property="article:published_time" content={fm.date} />
+        {fm.tags.map(tag => (
+          <meta key={tag} property="article:tag" content={tag} />
+        ))}
+      </Helmet>
       <ReadingProgress />
       <BlogLayout lang={displayLang} toggleLang={toggleLang}>
         <motion.article
@@ -216,6 +231,8 @@ export function BlogPost() {
           {/* Post Navigation */}
           <PostNav prev={adjacent.prev} next={adjacent.next} lang={displayLang} />
         </motion.article>
+
+        <Comments slug={slug || ''} lang={displayLang} />
 
         {/* Table of Contents */}
         <TableOfContents headings={toc} />

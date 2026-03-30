@@ -31,6 +31,9 @@ function parsePosts(): BlogPost[] {
     const raw = typeof module === 'string' ? module : module.default;
     const { data, content } = matter(raw);
 
+    // Skip draft posts
+    if (data.draft) continue;
+
     // Normalize date to ISO string (gray-matter parses YAML dates to Date objects)
     const date = data.date instanceof Date
       ? data.date.toISOString().slice(0, 10)

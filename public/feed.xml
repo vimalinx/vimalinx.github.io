@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vimalinx Blog</title>
+    <link>https://vimalinx.xyz/blog</link>
+    <description>Exploring the boundary between code and art</description>
+    <language>zh-CN</language>
+    <atom:link href="https://vimalinx.xyz/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Weekly #13 — bio_studio、resomate、openclaw-companion-app 等 5 个项目</title>
+      <link>https://vimalinx.xyz/blog/weekly-2026-W13</link>
+      <description>本周在 5 个项目中共提交 32 次</description>
+      <pubDate>Mon, 30 Mar 2026 00:00:00 GMT</pubDate>
+      <guid isPermaLink="true">https://vimalinx.xyz/blog/weekly-2026-W13</guid>
+    </item>
+    <item>
+      <title>你好，世界</title>
+      <link>https://vimalinx.xyz/blog/hello-world</link>
+      <description>第一篇文章，关于为什么我想写博客，以及这个网站是怎么来的。</description>
+      <pubDate>Sun, 29 Mar 2026 00:00:00 GMT</pubDate>
+      <guid isPermaLink="true">https://vimalinx.xyz/blog/hello-world</guid>
+    </item>
+    <item>
+      <title>搭建这个博客的技术选型</title>
+      <link>https://vimalinx.xyz/blog/building-this-site</link>
+      <description>记录一下这个博客系统的技术架构——为什么选 Markdown 文件管理、怎么处理路由、以及一些踩坑经验。</description>
+      <pubDate>Sat, 28 Mar 2026 00:00:00 GMT</pubDate>
+      <guid isPermaLink="true">https://vimalinx.xyz/blog/building-this-site</guid>
+    </item>
+  </channel>
+</rss>

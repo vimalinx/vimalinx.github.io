@@ -1,9 +1,11 @@
 import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, FileText, Bookmark } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import { BlogLayout } from '../components/BlogLayout';
 import { TagFilter } from '../components/TagFilter';
+import { SearchBox } from '../components/SearchBox';
 import { getAllPosts, getAllTags } from '../utils/blog';
 import { CATEGORY_META, type Category } from '../types/blog';
 import type { Language } from '../config';
@@ -12,6 +14,7 @@ export function BlogList() {
   const [lang, setLang] = useState<Language>('zh');
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);
+  const navigate = useNavigate();
 
   const allPostsForLang = getAllPosts(lang);
   const tags = getAllTags(lang);
@@ -45,6 +48,10 @@ export function BlogList() {
 
   return (
     <BlogLayout lang={lang} toggleLang={toggleLang}>
+      <Helmet>
+        <title>博客 — Vimalinx</title>
+        <meta name="description" content="想法、记录、技术分享" />
+      </Helmet>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -69,6 +76,9 @@ export function BlogList() {
               <Bookmark className="h-4 w-4 text-indigo-400" />
               {tags.length} {lang === 'zh' ? '个标签' : 'tags'}
             </span>
+          </div>
+          <div className="mt-4">
+            <SearchBox lang={lang} onSelect={(slug) => navigate(`/blog/${slug}`)} />
           </div>
         </div>
 
