@@ -275,6 +275,61 @@ html.light .giscus { filter: none !important; }
 /* Selection */
 html.light ::selection { background-color: rgba(139,92,246,0.2) !important; }
 
+/* Missing text colors */
+html.light .text-gray-200 { color: #94a3b8 !important; }
+html.light .text-gray-800 { color: #1e293b !important; }
+html.light .text-gray-900 { color: #0f172a !important; }
+
+/* Green-400 used in copied state */
+html.light .text-green-400 { color: #16a34a !important; }
+
+/* Missing bg colors */
+html.light .bg-gray-900\/90 { background-color: rgba(241,245,249,0.95) !important; }
+html.light .bg-gray-900 { background-color: #f1f5f9 !important; }
+
+/* Placeholder */
+html.light input::placeholder { color: #94a3b8 !important; }
+html.light input { color: #0f172a !important; }
+
+/* Divide */
+html.light .divide-white\/5 > :not([hidden]) ~ :not([hidden]) { border-color: #e2e8f0 !important; }
+html.light .divide-white\/10 > :not([hidden]) ~ :not([hidden]) { border-color: #e2e8f0 !important; }
+
+/* Gradient text - the critical fix */
+html.light .bg-gradient-to-r.from-white {
+  --tw-gradient-from: #1e293b var(--tw-gradient-from-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+html.light .bg-gradient-to-r.via-gray-200 {
+  --tw-gradient-via: #64748b var(--tw-gradient-via-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to) !important;
+}
+html.light .bg-gradient-to-r.to-gray-500 {
+  --tw-gradient-to: #94a3b8 var(--tw-gradient-to-position) !important;
+}
+
+/* Also handle the gradient for BlogPost divider */
+html.light .from-transparent.via-white\/20.to-transparent {
+  --tw-gradient-via: rgba(203,213,225,0.4) var(--tw-gradient-via-position) !important;
+}
+
+/* Post title links */
+html.light a .text-white { color: #0f172a !important; }
+html.light a:hover .text-white { color: #7c3aed !important; }
+
+/* Specific component fixes */
+html.light .hover\:border-purple-500\/30 { border-color: transparent; }
+html.light .hover\:border-purple-500\/30:hover { border-color: rgba(124,58,237,0.3) !important; }
+html.light .hover\:bg-purple-500\/5:hover { background-color: rgba(124,58,237,0.05) !important; }
+html.light .hover\:text-purple-400:hover { color: #7c3aed !important; }
+html.light .hover\:text-purple-300:hover { color: #7c3aed !important; }
+
+/* Accent colors for checkboxes */
+html.light .accent-purple-500 { accent-color: #7c3aed !important; }
+
+/* Selection */
+html.light ::selection { background-color: rgba(139,92,246,0.2) !important; }
+
 /* ===== Print styles ===== */
 @media print {
   body { @apply bg-white text-black; }
