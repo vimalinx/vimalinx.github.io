@@ -2,6 +2,13 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import remarkFootnotes from 'remark-footnotes';
+import remarkDirective from 'remark-directive';
+import rehypeKatex from 'rehype-katex';
+import rehypeRaw from 'rehype-raw';
+import 'katex/dist/katex.min.css';
 import { Calendar, Clock, Tag, ArrowLeft, Languages, ArrowUp } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { BlogLayout } from '../components/BlogLayout';
@@ -12,6 +19,8 @@ import { ShareButtons } from '../components/ShareButtons';
 import { Comments } from '../components/Comments';
 import { RelatedPosts } from '../components/RelatedPosts';
 import { HeadingAnchor } from '../components/HeadingAnchor';
+import { MermaidDiagram } from '../components/MermaidDiagram';
+import { Callout } from '../components/Callout';
 import { getPost, getAvailableLangs, getTableOfContents, getAdjacentPosts, getRelatedPosts } from '../utils/blog';
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -234,6 +243,8 @@ export function BlogPost() {
           {/* Article Content */}
           <div className="blog-prose">
             <Markdown
+              remarkPlugins={[remarkGfm, remarkMath, remarkFootnotes as any, remarkDirective]}
+              rehypePlugins={[rehypeKatex, rehypeRaw]}
               components={{
                 h2: ({ children }) => {
                   const text = String(children);
@@ -246,12 +257,33 @@ export function BlogPost() {
                   return <HeadingAnchor id={id} as="h3">{children}</HeadingAnchor>;
                 },
                 pre: ({ children, ...props }) => {
-                  // Extract code element from children
                   const codeChild = Array.isArray(children) ? children[0] : children;
-                  if (codeChild?.props?.className?.startsWith('language-')) {
+                  const className = codeChild?.props?.className || '';
+                  // Mermaid diagram
+                  if (className === 'language-mermaid') {
+                    const code = String(codeChild?.props?.children || '').replace(/\n$/, '');
+                    return <MermaidDiagram chart={code} />;
+                  }
+                  // Regular code block
+                  if (className.startsWith('language-')) {
                     return <CodeBlock {...codeChild.props} />;
                   }
                   return <pre {...props}>{children}</pre>;
+                },
+                blockquote: ({ children }) => {
+                  // GitHub-style alerts: > [!NOTE], > [!WARNING], etc.
+                  const childArray = Array.isArray(children) ? children : [children];
+                  const firstChild = childArray[0];
+                  const text = typeof firstChild === 'string' ? firstChild : '';
+
+                  const alertMatch = text.match(/^\[!(NOTE|WARNING|TIP|DANGER|INFO|CAUTION)\]\s*/i);
+                  if (alertMatch) {
+                    const rawType = alertMatch[1].toLowerCase();
+                    const type = rawType === 'caution' ? 'warning' : rawType === 'important' ? 'info' : rawType as 'note' | 'warning' | 'tip' | 'danger' | 'info';
+                    const rest = [text.slice(alertMatch[0].length), ...childArray.slice(1)];
+                    return <Callout type={type}>{rest}</Callout>;
+                  }
+                  return <blockquote className="mb-6 rounded-r-lg border-l-4 border-purple-500/60 bg-purple-500/5 py-3 pl-5 pr-4">{children}</blockquote>;
                 },
                 img: ({ src, alt, ...props }) => (
                   <img
@@ -262,6 +294,20 @@ export function BlogPost() {
                     {...props}
                   />
                 ),
+                // Task list checkboxes (GFM)
+                input: ({ checked, ...props }) => (
+                  <input
+                    type="checkbox"
+                    checked={checked || false}
+                    disabled
+                    className="mr-2 h-4 w-4 rounded border-white/20 bg-white/5 text-purple-500 accent-purple-500"
+                    {...props}
+                  />
+                ),
+                // Footnote references
+                sup: ({ children, ...props }) => <sup className="text-purple-400 text-xs" {...props}>{children}</sup>,
+                // Footnote back-references section
+                section: ({ children, ...props }) => <section className="text-sm text-gray-500 mt-8 pt-4 border-t border-white/10" {...props}>{children}</section>,
               }}
             >
               {displayPost.content}

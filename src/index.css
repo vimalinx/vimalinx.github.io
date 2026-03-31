@@ -326,6 +326,100 @@ html.light .code-block-lang {
   @apply text-slate-400;
 }
 
+/* KaTeX math styles */
+.blog-prose .katex-display {
+  @apply my-6 overflow-x-auto py-2;
+}
+
+.blog-prose .katex {
+  @apply text-base;
+}
+
+/* GFM Task list */
+.blog-prose .contains-task-list {
+  @apply list-none ml-0;
+}
+
+.blog-prose .task-list-item {
+  @apply flex items-start gap-2;
+}
+
+.blog-prose .task-list-item input[type="checkbox"] {
+  @apply mt-1 h-4 w-4 rounded border-white/20 bg-white/5 accent-purple-500 shrink-0;
+}
+
+/* Footnotes */
+.blog-prose .footnotes {
+  @apply mt-10 pt-6 border-t border-white/10 text-sm text-gray-500;
+}
+
+.blog-prose .footnotes ol {
+  @apply list-decimal ml-4 space-y-1;
+}
+
+.blog-prose .footnotes li {
+  @apply text-sm;
+}
+
+.blog-prose .data-footnote-backref {
+  @apply text-purple-400 no-underline hover:text-purple-300;
+}
+
+/* Callout blockquotes (> [!NOTE], > [!WARNING], etc.) */
+.blog-prose blockquote.callout-note {
+  @apply border-blue-500/40 bg-blue-500/5;
+}
+
+.blog-prose blockquote.callout-warning {
+  @apply border-amber-500/40 bg-amber-500/5;
+}
+
+.blog-prose blockquote.callout-tip {
+  @apply border-green-500/40 bg-green-500/5;
+}
+
+.blog-prose blockquote.callout-danger {
+  @apply border-red-500/40 bg-red-500/5;
+}
+
+.blog-prose blockquote.callout-info {
+  @apply border-purple-500/40 bg-purple-500/5;
+}
+
+.blog-prose blockquote .callout-header {
+  @apply flex items-center gap-2 mb-2 text-sm font-semibold uppercase tracking-wider;
+}
+
+.blog-prose blockquote.callout-note .callout-header {
+  @apply text-blue-400;
+}
+
+.blog-prose blockquote.callout-warning .callout-header {
+  @apply text-amber-400;
+}
+
+.blog-prose blockquote.callout-tip .callout-header {
+  @apply text-green-400;
+}
+
+.blog-prose blockquote.callout-danger .callout-header {
+  @apply text-red-400;
+}
+
+.blog-prose blockquote.callout-info .callout-header {
+  @apply text-purple-400;
+}
+
+/* Mermaid diagram container */
+.blog-prose .mermaid-container {
+  @apply mb-6 rounded-xl border border-white/10 bg-white/[0.02] p-4;
+}
+
+/* Strikethrough (GFM) */
+.blog-prose del {
+  @apply text-gray-500 line-through;
+}
+
 /* Print styles */
 @media print {
   body {
