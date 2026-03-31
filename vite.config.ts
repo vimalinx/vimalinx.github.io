@@ -11,16 +11,4 @@ export default defineConfig({
   define: {
     global: 'globalThis',
   },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-motion': ['framer-motion'],
-          'vendor-highlight': ['highlight.js/lib/core'],
-          'vendor-markdown': ['react-markdown', 'gray-matter'],
-        },
-      },
-    },
-  },
 })
