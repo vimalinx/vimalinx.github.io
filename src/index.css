@@ -139,207 +139,141 @@ html { scroll-behavior: smooth; }
 .blog-prose del { @apply text-gray-500 line-through; }
 
 /* ========================================================
-   LIGHT THEME — comprehensive coverage
+
+/* ========================================================
+   LIGHT THEME — global overrides with !important to flip
+   all hardcoded dark Tailwind values
    ======================================================== */
 
 /* Base */
 html.light body {
-  @apply bg-white text-slate-900 selection:bg-purple-500/20 selection:text-purple-900;
+  @apply bg-white text-slate-900 !important;
 }
 
-html.light ::-webkit-scrollbar-track { background: #f1f5f9; }
-html.light ::-webkit-scrollbar-thumb { background: #cbd5e1; }
-html.light ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+html.light ::-webkit-scrollbar-track { background: #f1f5f9 !important; }
+html.light ::-webkit-scrollbar-thumb { background: #cbd5e1 !important; border-radius: 4px !important; }
+html.light ::-webkit-scrollbar-thumb:hover { background: #94a3b8 !important; }
 
-/* Layout wrapper */
-html.light .blog-layout {
-  @apply bg-white text-slate-900;
-}
-
-/* Background — hide animated blobs in light mode, show subtle gradient */
+/* Background */
 html.light .blog-bg {
   background: linear-gradient(135deg, #faf5ff 0%, #f0f9ff 50%, #fdf2f8 100%) !important;
 }
-html.light .blog-bg > * {
-  opacity: 0.3 !important;
-}
+html.light .blog-bg > * { opacity: 0.15 !important; }
 
-/* Header */
-html.light .blog-header {
-  @apply bg-white/80 backdrop-blur-xl border-b border-slate-100;
-}
-html.light .blog-header a,
-html.light .blog-header button {
-  @apply text-slate-700;
-}
-html.light .blog-header .blog-logo {
-  @apply text-slate-900;
-}
-html.light .blog-header .nav-link {
-  @apply text-slate-500 hover:text-slate-900;
-}
-html.light .blog-header .header-btn {
-  @apply border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700 hover:border-slate-300;
-}
+/* ---- GLOBAL OVERRIDES using Tailwind utility classes ---- */
+/* These flip ALL hardcoded dark values across all components */
 
-/* Mobile menu */
-html.light .mobile-menu {
-  @apply border-slate-200 bg-white/95 backdrop-blur-xl;
-}
-html.light .mobile-menu a {
-  @apply text-slate-600 hover:bg-slate-50 hover:text-slate-900;
-}
-html.light .hamburger-line {
-  @apply bg-slate-600;
-}
+/* text-white → slate-900 */
+html.light .text-white { color: #0f172a !important; }
+/* text-gray-300 → slate-600 */
+html.light .text-gray-300 { color: #475569 !important; }
+/* text-gray-400 → slate-500 */
+html.light .text-gray-400 { color: #64748b !important; }
+/* text-gray-500 → slate-400 */
+html.light .text-gray-500 { color: #94a3b8 !important; }
+/* text-gray-600 → slate-400 */
+html.light .text-gray-600 { color: #94a3b8 !important; }
+/* text-gray-700 → slate-300 */
+html.light .text-gray-700 { color: #cbd5e1 !important; }
+/* text-purple-300 → purple-600 */
+html.light .text-purple-300 { color: #7c3aed !important; }
+html.light .text-purple-400 { color: #7c3aed !important; }
 
-/* Footer */
-html.light .blog-footer {
-  @apply border-t border-slate-100 text-slate-400;
-}
-html.light .blog-footer a {
-  @apply hover:text-slate-600;
-}
+/* group-hover */
+html.light .group-hover\:text-purple-300 { color: inherit; }
+html.light .group:hover .group-hover\:text-purple-300 { color: #7c3aed !important; }
 
-/* Blog prose — light */
-html.light .blog-prose { @apply text-slate-700; }
-html.light .blog-prose h1, html.light .blog-prose h2, html.light .blog-prose h3 { @apply text-slate-900; }
-html.light .blog-prose strong { @apply text-slate-900; }
-html.light .blog-prose a { @apply text-purple-600 hover:text-purple-500; }
-html.light .blog-prose code { @apply bg-slate-100 text-purple-700; }
-html.light .blog-prose pre { @apply bg-slate-50 border-slate-200; }
-html.light .blog-prose pre code { @apply text-slate-700; }
-html.light .blog-prose blockquote { @apply bg-purple-50 border-purple-400; }
-html.light .blog-prose blockquote p { @apply text-slate-600; }
-html.light .blog-prose th { @apply text-slate-900 bg-slate-50; }
-html.light .blog-prose td { @apply text-slate-600 border-slate-100; }
-html.light .blog-prose tbody tr:hover { @apply bg-slate-50; }
-html.light .blog-prose hr { @apply border-slate-200; }
-html.light .blog-prose img { @apply border-slate-200; }
-html.light .blog-prose .footnotes { @apply border-slate-200 text-slate-400; }
+/* bg-white/X → slate */
+html.light .bg-white\/5,
+html.light .bg-white\/\[0\.02\],
+html.light .bg-white\/\[0\.03\] { background-color: #f8fafc !important; }
+html.light .bg-white\/10 { background-color: #f1f5f9 !important; }
 
-/* Tags */
-html.light .tag-pill:not(.active) { @apply border-slate-200 bg-slate-50 text-slate-500 hover:border-slate-300 hover:text-slate-700; }
-html.light .tag-pill.active { @apply border-purple-500/50 bg-purple-50 text-purple-600; }
+/* bg-black/X → white */
+html.light .bg-black\/20 { background-color: rgba(255,255,255,0.8) !important; }
+html.light .bg-black\/60 { background-color: rgba(255,255,255,0.8) !important; }
+html.light .bg-black\/80 { background-color: rgba(255,255,255,0.95) !important; }
+html.light .bg-black\/90 { background-color: rgba(255,255,255,0.95) !important; }
+
+/* border-white/X → slate */
+html.light .border-white\/5 { border-color: #e2e8f0 !important; }
+html.light .border-white\/10 { border-color: #e2e8f0 !important; }
+html.light .border-white\/20 { border-color: #cbd5e1 !important; }
+
+/* hover overrides */
+html.light .hover\:bg-white\/5:hover { background-color: #f8fafc !important; }
+html.light .hover\:bg-white\/10:hover { background-color: #f1f5f9 !important; }
+html.light .hover\:bg-white\/\[0\.03\]:hover { background-color: #f8fafc !important; }
+html.light .hover\:bg-white\/\[0\.04\]:hover { background-color: #f8fafc !important; }
+html.light .hover\:text-white:hover { color: #0f172a !important; }
+html.light .hover\:text-gray-300:hover { color: #475569 !important; }
+
+/* Blog prose */
+html.light .blog-prose { color: #334155 !important; }
+html.light .blog-prose h1,
+html.light .blog-prose h2,
+html.light .blog-prose h3 { color: #0f172a !important; }
+html.light .blog-prose strong { color: #0f172a !important; }
+html.light .blog-prose a { color: #7c3aed !important; }
+html.light .blog-prose a:hover { color: #6d28d9 !important; }
+html.light .blog-prose code { background-color: #f1f5f9 !important; color: #7c3aed !important; }
+html.light .blog-prose pre { background-color: #f8fafc !important; border-color: #e2e8f0 !important; }
+html.light .blog-prose pre code { color: #475569 !important; }
+html.light .blog-prose blockquote { background-color: #faf5ff !important; border-color: #a855f7 !important; }
+html.light .blog-prose blockquote p { color: #475569 !important; }
+html.light .blog-prose th { color: #0f172a !important; background-color: #f8fafc !important; }
+html.light .blog-prose td { color: #475569 !important; }
+html.light .blog-prose hr { border-color: #e2e8f0 !important; }
+html.light .blog-prose img { border-color: #e2e8f0 !important; }
+html.light .blog-prose .footnotes { border-color: #e2e8f0 !important; color: #94a3b8 !important; }
+
+/* Callouts — light */
+html.light .blog-prose blockquote.callout-note { background-color: #eff6ff !important; border-color: #3b82f6 !important; }
+html.light .blog-prose blockquote.callout-warning { background-color: #fffbeb !important; border-color: #f59e0b !important; }
+html.light .blog-prose blockquote.callout-tip { background-color: #f0fdf4 !important; border-color: #22c55e !important; }
+html.light .blog-prose blockquote.callout-danger { background-color: #fef2f2 !important; border-color: #ef4444 !important; }
+html.light .blog-prose blockquote.callout-info { background-color: #faf5ff !important; border-color: #a855f7 !important; }
 
 /* Reading progress */
-html.light .reading-progress { background: linear-gradient(90deg, #7c3aed, #4f46e5); }
+html.light .reading-progress { background: linear-gradient(90deg, #7c3aed, #4f46e5) !important; }
 
 /* Back to top */
-html.light .back-to-top { @apply border-slate-200 bg-white/80 text-slate-400 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700; }
+html.light .back-to-top { border-color: #e2e8f0 !important; background-color: rgba(255,255,255,0.8) !important; color: #94a3b8 !important; }
 
-/* Code blocks */
-html.light .code-block-wrapper .copy-btn { @apply border-slate-200 bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-700; }
-html.light .code-block-header { @apply bg-slate-50 border-slate-200; }
-html.light .code-block-lang { @apply text-slate-400; }
+/* Tags */
+html.light .tag-pill.active { border-color: rgba(124,58,237,0.5) !important; background-color: #faf5ff !important; color: #7c3aed !important; }
+html.light .tag-pill:not(.active) { border-color: #e2e8f0 !important; background-color: #f8fafc !important; color: #64748b !important; }
 
-/* Callouts — light mode needs slightly different bg */
-html.light .blog-prose blockquote.callout-note { @apply bg-blue-50 border-blue-400; }
-html.light .blog-prose blockquote.callout-warning { @apply bg-amber-50 border-amber-400; }
-html.light .blog-prose blockquote.callout-tip { @apply bg-green-50 border-green-400; }
-html.light .blog-prose blockquote.callout-danger { @apply bg-red-50 border-red-400; }
-html.light .blog-prose blockquote.callout-info { @apply bg-purple-50 border-purple-400; }
-html.light .blog-prose blockquote.callout-note .callout-header { @apply text-blue-600; }
-html.light .blog-prose blockquote.callout-warning .callout-header { @apply text-amber-600; }
-html.light .blog-prose blockquote.callout-tip .callout-header { @apply text-green-600; }
-html.light .blog-prose blockquote.callout-danger .callout-header { @apply text-red-600; }
-html.light .blog-prose blockquote.callout-info .callout-header { @apply text-purple-600; }
+/* Code block chrome */
+html.light .code-block-header { background-color: #f8fafc !important; border-color: #e2e8f0 !important; }
+html.light .code-block-lang { color: #94a3b8 !important; }
+html.light .code-block-wrapper .copy-btn { border-color: #e2e8f0 !important; background-color: #f8fafc !important; color: #94a3b8 !important; }
 
-/* Post cards / links */
-html.light .post-card {
-  @apply hover:bg-slate-50;
-}
-html.light .post-card h2 {
-  @apply text-slate-900 group-hover:text-purple-600;
-}
-html.light .post-card .post-excerpt {
-  @apply text-slate-500;
-}
-html.light .post-card .post-meta {
-  @apply text-slate-400;
-}
+/* Lightbox */
+html.light .lightbox-overlay { background-color: rgba(255,255,255,0.9) !important; }
 
-/* Sidebar */
-html.light .sidebar-heading {
-  @apply text-slate-400;
-}
-html.light .sidebar-tag {
-  @apply border-slate-200 bg-slate-50 text-slate-500 hover:border-purple-300 hover:text-purple-600 hover:bg-purple-50;
-}
-html.light .sidebar-cat-btn {
-  @apply text-slate-500 hover:bg-slate-50 hover:text-slate-700;
-}
-html.light .sidebar-cat-btn.active {
-  @apply bg-purple-50 text-purple-600;
-}
-html.light .sidebar-link {
-  @apply text-slate-500 hover:bg-slate-50 hover:text-slate-700;
-}
+/* Mix-blend-difference fix for header */
+html.light .mix-blend-difference { mix-blend-mode: normal !important; }
 
-/* Archive page timeline */
-html.light .archive-line {
-  @apply border-slate-200;
-}
-html.light .archive-item {
-  @apply hover:border-purple-400 hover:bg-slate-50;
-}
-html.light .archive-item-title {
-  @apply text-slate-800 group-hover:text-purple-600;
-}
+/* Category badges */
+html.light .text-blue-400 { color: #3b82f6 !important; }
+html.light .border-blue-500\/30 { border-color: rgba(59,130,246,0.3) !important; }
+html.light .bg-blue-500\/10 { background-color: rgba(59,130,246,0.1) !important; }
+html.light .text-green-400 { color: #22c55e !important; }
+html.light .border-green-500\/30 { border-color: rgba(34,197,94,0.3) !important; }
+html.light .bg-green-500\/10 { background-color: rgba(34,197,94,0.1) !important; }
+html.light .text-amber-400 { color: #f59e0b !important; }
+html.light .border-amber-500\/30 { border-color: rgba(245,158,11,0.3) !important; }
+html.light .bg-amber-500\/10 { background-color: rgba(245,158,11,0.1) !important; }
+html.light .text-cyan-400 { color: #06b6d4 !important; }
+html.light .border-cyan-500\/30 { border-color: rgba(6,182,212,0.3) !important; }
+html.light .bg-cyan-500\/10 { background-color: rgba(6,182,212,0.1) !important; }
 
-/* Category badge colors — light */
-html.light .cat-tech { @apply text-blue-600 border-blue-300 bg-blue-50; }
-html.light .cat-weekly { @apply text-purple-600 border-purple-300 bg-purple-50; }
-html.light .cat-project { @apply text-green-600 border-green-300 bg-green-50; }
-html.light .cat-essay { @apply text-amber-600 border-amber-300 bg-amber-50; }
-html.light .cat-learning { @apply text-cyan-600 border-cyan-300 bg-cyan-50; }
+/* Giscus */
+html.light .giscus { filter: none !important; }
 
-/* Related posts cards */
-html.light .related-card {
-  @apply border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-white;
-}
-html.light .related-card h4 {
-  @apply text-slate-800 group-hover:text-purple-600;
-}
-
-/* Search */
-html.light .search-input {
-  @apply bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:border-purple-300 focus:ring-purple-200;
-}
-html.light .search-dropdown {
-  @apply bg-white border-slate-200 shadow-lg;
-}
-html.light .search-item {
-  @apply text-slate-700 hover:bg-slate-50;
-}
-
-/* Share buttons */
-html.light .share-btn {
-  @apply border-slate-200 bg-slate-50 text-slate-500 hover:bg-white hover:text-slate-700 hover:border-slate-300;
-}
-
-/* Post nav */
-html.light .post-nav-card {
-  @apply border-slate-200 bg-slate-50 hover:border-slate-300;
-}
-html.light .post-nav-title {
-  @apply text-slate-700 group-hover:text-purple-600;
-}
-
-/* Hero gradient text — light */
-html.light .hero-gradient {
-  @apply text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-slate-600 to-slate-400;
-}
-
-/* 404 page */
-html.light .error-page {
-  @apply bg-white text-slate-900;
-}
-
-/* Giscus theme */
-html.light .giscus {
-  filter: none;
-}
+/* Selection */
+html.light ::selection { background-color: rgba(139,92,246,0.2) !important; }
 
 /* ===== Print styles ===== */
 @media print {
