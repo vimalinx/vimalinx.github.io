@@ -30,9 +30,20 @@ export function BlogLayout({ lang, toggleLang, children }: BlogLayoutProps) {
     setTheme(next);
     localStorage.setItem('theme', next);
     document.documentElement.classList.toggle('light', next === 'light');
+    // Update Giscus theme
+    const giscusFrame = document.querySelector('iframe.giscus-frame') as HTMLIFrameElement | null;
+    if (giscusFrame?.contentWindow) {
+      giscusFrame.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: next === 'light' ? 'light' : 'dark_tritanopia' } } },
+        'https://giscus.app'
+      );
+    }
   };
+
+  const isLight = theme === 'light';
+
   return (
-    <div className="relative min-h-screen w-full bg-black text-white selection:bg-purple-500/30">
+    <div className={`blog-layout relative min-h-screen w-full transition-colors duration-300 ${isLight ? 'bg-white text-slate-900' : 'bg-black text-white'} selection:bg-purple-500/30`}>
       {/* Skip to content */}
       <a
         href="#main-content"
@@ -42,26 +53,26 @@ export function BlogLayout({ lang, toggleLang, children }: BlogLayoutProps) {
       </a>
 
       {/* Background */}
-      <div className="fixed inset-0 z-0">
+      <div className="blog-bg fixed inset-0 z-0">
         <Background />
       </div>
 
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50">
+      <header className={`blog-header fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${isLight ? 'bg-white/80 backdrop-blur-xl border-b border-slate-100' : ''}`}>
         <div className="flex justify-between px-6 py-6 md:px-12">
           <div className="flex items-center gap-6">
-            <Link to="/" className="text-xl font-bold tracking-tighter mix-blend-difference">
+            <Link to="/" className={`text-xl font-bold tracking-tighter mix-blend-difference ${isLight ? 'text-slate-900' : 'text-white'}`}>
               VIMALINX
             </Link>
             <Link
               to="/blog"
-              className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-white mix-blend-difference"
+              className={`hidden sm:inline-flex items-center gap-1 text-sm font-medium mix-blend-difference transition-colors ${isLight ? 'text-slate-500 hover:text-slate-900' : 'text-white hover:text-white'}`}
             >
               {lang === 'zh' ? '博客' : 'Blog'}
             </Link>
             <Link
               to="/blog/archive"
-              className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-white mix-blend-difference"
+              className={`hidden sm:inline-flex items-center gap-1 text-sm font-medium mix-blend-difference transition-colors ${isLight ? 'text-slate-500 hover:text-slate-900' : 'text-white hover:text-white'}`}
             >
               {lang === 'zh' ? '归档' : 'Archive'}
             </Link>
@@ -69,41 +80,57 @@ export function BlogLayout({ lang, toggleLang, children }: BlogLayoutProps) {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleTheme}
-              className="group flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-2 text-sm backdrop-blur-md transition-all hover:bg-white/10"
+              className={`group flex items-center gap-2 rounded-full border px-3 py-2 text-sm backdrop-blur-md transition-all hover:bg-white/10 ${
+                isLight
+                  ? 'border-slate-200 bg-white/60 text-slate-500 hover:text-slate-700'
+                  : 'border-white/10 bg-black/20 text-gray-400 hover:text-white'
+              }`}
               aria-label="Toggle theme"
             >
-              {theme === 'dark' ? (
-                <Moon className="h-4 w-4 text-gray-400 group-hover:text-white" />
+              {isLight ? (
+                <Sun className="h-4 w-4 text-amber-500 group-hover:text-amber-400" />
               ) : (
-                <Sun className="h-4 w-4 text-amber-400 group-hover:text-amber-300" />
+                <Moon className="h-4 w-4 text-gray-400 group-hover:text-white" />
               )}
             </button>
             <Link
               to="/"
-              className="hidden sm:flex items-center gap-1 rounded-full border border-white/10 bg-black/20 px-3 py-2 text-sm backdrop-blur-md transition-all hover:bg-white/10 text-gray-300 hover:text-white"
+              className={`hidden sm:flex items-center gap-1 rounded-full border px-3 py-2 text-sm backdrop-blur-md transition-all ${
+                isLight
+                  ? 'border-slate-200 bg-white/60 text-slate-500 hover:bg-slate-50 hover:text-slate-700'
+                  : 'border-white/10 bg-black/20 text-gray-300 hover:bg-white/10 hover:text-white'
+              }`}
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>{lang === 'zh' ? '首页' : 'Home'}</span>
             </Link>
             <button
               onClick={toggleLang}
-              className="group flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-4 py-2 text-sm backdrop-blur-md transition-all hover:bg-white/10"
+              className={`group flex items-center gap-2 rounded-full border px-4 py-2 text-sm backdrop-blur-md transition-all ${
+                isLight
+                  ? 'border-slate-200 bg-white/60 hover:bg-slate-50'
+                  : 'border-white/10 bg-black/20 hover:bg-white/10'
+              }`}
             >
-              <Languages className="h-4 w-4 text-gray-400 group-hover:text-white" />
-              <span className="font-medium text-gray-300 group-hover:text-white">
+              <Languages className={`h-4 w-4 ${isLight ? 'text-slate-400 group-hover:text-slate-600' : 'text-gray-400 group-hover:text-white'}`} />
+              <span className={`font-medium ${isLight ? 'text-slate-600 group-hover:text-slate-800' : 'text-gray-300 group-hover:text-white'}`}>
                 {lang === 'zh' ? 'EN' : '中文'}
               </span>
             </button>
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="sm:hidden flex items-center justify-center rounded-full border border-white/10 bg-black/20 p-2 backdrop-blur-md transition-all hover:bg-white/10"
+              className={`sm:hidden flex items-center justify-center rounded-full border p-2 backdrop-blur-md transition-all ${
+                isLight
+                  ? 'border-slate-200 bg-white/60 hover:bg-slate-50'
+                  : 'border-white/10 bg-black/20 hover:bg-white/10'
+              }`}
               aria-label="Toggle menu"
             >
               <div className="space-y-1">
-                <span className={`block h-0.5 w-4 bg-gray-300 transition-all ${mobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
-                <span className={`block h-0.5 w-4 bg-gray-300 transition-all ${mobileMenuOpen ? 'opacity-0' : ''}`} />
-                <span className={`block h-0.5 w-4 bg-gray-300 transition-all ${mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
+                <span className={`block h-0.5 w-4 transition-all ${isLight ? 'bg-slate-600' : 'bg-gray-300'} ${mobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
+                <span className={`block h-0.5 w-4 transition-all ${isLight ? 'bg-slate-600' : 'bg-gray-300'} ${mobileMenuOpen ? 'opacity-0' : ''}`} />
+                <span className={`block h-0.5 w-4 transition-all ${isLight ? 'bg-slate-600' : 'bg-gray-300'} ${mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
               </div>
             </button>
           </div>
@@ -115,27 +142,35 @@ export function BlogLayout({ lang, toggleLang, children }: BlogLayoutProps) {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="sm:hidden mx-6 rounded-xl border border-white/10 bg-black/80 backdrop-blur-xl overflow-hidden"
+            className={`sm:hidden mx-6 rounded-xl border backdrop-blur-xl overflow-hidden ${
+              isLight ? 'bg-white/95 border-slate-200' : 'bg-black/80 border-white/10'
+            }`}
           >
             <nav className="flex flex-col p-2">
               <Link
                 to="/blog"
                 onClick={() => setMobileMenuOpen(false)}
-                className="rounded-lg px-4 py-3 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-all"
+                className={`rounded-lg px-4 py-3 text-sm transition-all ${
+                  isLight ? 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                }`}
               >
                 {lang === 'zh' ? '博客' : 'Blog'}
               </Link>
               <Link
                 to="/blog/archive"
                 onClick={() => setMobileMenuOpen(false)}
-                className="rounded-lg px-4 py-3 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-all"
+                className={`rounded-lg px-4 py-3 text-sm transition-all ${
+                  isLight ? 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                }`}
               >
                 {lang === 'zh' ? '归档' : 'Archive'}
               </Link>
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="rounded-lg px-4 py-3 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-all"
+                className={`rounded-lg px-4 py-3 text-sm transition-all ${
+                  isLight ? 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                }`}
               >
                 {lang === 'zh' ? '首页' : 'Home'}
               </Link>
@@ -150,15 +185,17 @@ export function BlogLayout({ lang, toggleLang, children }: BlogLayoutProps) {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-white/10 px-6 py-6 md:px-12 text-xs text-gray-600">
+      <footer className={`blog-footer relative z-10 px-6 py-6 md:px-12 text-xs transition-colors duration-300 ${
+        isLight ? 'border-t border-slate-100 text-slate-400' : 'border-t border-white/10 text-gray-600'
+      }`}>
         <div className="flex flex-wrap items-center justify-between gap-4">
           <p>&copy; {new Date().getFullYear()} Vimalinx</p>
           <div className="flex gap-4">
-            <Link to="/blog/archive" className="hover:text-gray-400 transition-colors">
+            <Link to="/blog/archive" className={`transition-colors ${isLight ? 'hover:text-slate-600' : 'hover:text-gray-400'}`}>
               {lang === 'zh' ? '归档' : 'Archive'}
             </Link>
-            <a href="/feed.xml" target="_blank" className="hover:text-gray-400 transition-colors">RSS</a>
-            <a href="/sitemap.xml" target="_blank" className="hover:text-gray-400 transition-colors">Sitemap</a>
+            <a href="/feed.xml" target="_blank" className={`transition-colors ${isLight ? 'hover:text-slate-600' : 'hover:text-gray-400'}`}>RSS</a>
+            <a href="/sitemap.xml" target="_blank" className={`transition-colors ${isLight ? 'hover:text-slate-600' : 'hover:text-gray-400'}`}>Sitemap</a>
           </div>
         </div>
       </footer>
